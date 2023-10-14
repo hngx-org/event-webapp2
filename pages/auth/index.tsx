@@ -17,13 +17,13 @@ import { AuthContext } from "@/provider/AuthProvider";
 
 export default function Auth() {
   const router = useRouter();
-  const authContext = useContext<AuthContextType | null>(AuthContext);
-  const user = authContext ? authContext.user : null;
+  //   const authContext = useContext<AuthContextType | null>(AuthContext);
+  //   const user = authContext ? authContext.user : null;
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    console.log(user);
-  }, []);
+  //   useEffect(() => {
+  //     console.log(user);
+  //   }, []);
   // const signInWithGoogle = async () => {
   //   setIsLoading(true);
   //   try {
@@ -40,18 +40,18 @@ export default function Auth() {
   //     setIsLoading(false);
   //   }
   // };
-  const signInWithGoogle = async () => {
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      console.log(result.user);
-      router.push("/timeline");
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const handleLogout = () => {
-    auth.signOut();
-  };
+  //   const signInWithGoogle = async () => {
+  //     try {
+  //       const result = await signInWithPopup(auth, googleProvider);
+  //       console.log(result.user);
+  //       router.push("/timeline");
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   const handleLogout = () => {
+  //     auth.signOut();
+  //   };
 
   const signInWithTwitter = () => {
     toast.error(
@@ -118,7 +118,7 @@ export default function Auth() {
                 {/* <Link href="/timeline"> */}
                 <button
                   disabled={isLoading}
-                  onClick={signInWithGoogle}
+                  //   onClick={signInWithGoogle}
                   className="flex text-sm md:text-md justify-center w-full bg-white hover:bg-gray-100 py-4 border border-gray-400 font-semibold rounded-xl"
                 >
                   <Image

@@ -8,7 +8,7 @@ import Logo from "assets/wetindeysup.png";
 import NavLinks from "./navLinks";
 import { LogoutIcon } from "@/public/assets/icon/sideBarIcons";
 import Image from "next/image";
-import { AuthProvider } from "@/provider/AuthProvider";
+// import { AuthProvider } from "@/provider/AuthProvider";
 
 type Anchor = "left" | "top" | "bottom" | "right";
 
