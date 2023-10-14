@@ -35,8 +35,8 @@ export default function CreateEvents(props: {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
-  const [image, setImage] = useState<string | null>(null);
-  const [imageName, setImageName] = useState<string | null>(null);
+  const [image, setImage] = useState<string | null>("null");
+  const [imageName, setImageName] = useState<string>("");
   const [startDate, setStartDate] = useState<dayjs.Dayjs | null>(null);
   const [endDate, setEndDate] = useState<dayjs.Dayjs | null>(today);
   const [startTime, setStartTime] = useState<dayjs.Dayjs | null>(today);
@@ -120,7 +120,7 @@ export default function CreateEvents(props: {
 
   const handleImageRemove = () => {
     setImage(null);
-    setImageName(null);
+    setImageName("");
     const input = document.getElementById(
       "image-upload-input",
     ) as HTMLInputElement;
@@ -198,17 +198,17 @@ export default function CreateEvents(props: {
             </label>
             <div className="flex flex-grow px-2 py-4 items-center gap-2 rounded-2xl border-2 border-black bg-brand-gray-100">
               <div className="text-center flex items-center ">
-                {image ? (
+                {file ? (
                   <>
                     <Image
-                      src={image}
+                      src={file}
                       alt="Uploaded"
                       height={24}
                       width={24}
                       className="rounded items-center h-full"
                     />
                     <div className="flex justify-between w-full">
-                      <p>{imageName}</p>
+                      {imageName && <p>{imageName}</p>}
                       <button
                         onClick={handleImageRemove}
                         className="remove-button"
@@ -230,7 +230,7 @@ export default function CreateEvents(props: {
                   id="image-upload-input"
                   className="hidden"
                 />
-                {image ? null : (
+                {file ? null : (
                   <label
                     htmlFor="image-upload-input"
                     className="cursor-pointer text-[#9CA3AF]  max-w-[347px]"
