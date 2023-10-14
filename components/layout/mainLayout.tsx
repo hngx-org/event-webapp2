@@ -26,9 +26,6 @@ function MainLayout({ children, title }: MainLayoutProps) {
   useEffect(() => {
     const token = localStorage.getItem("token") || "";
     http.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    if (!token) {
-      router.push("/");
-    }
   }, []);
   function logout() {
     localStorage.removeItem("token");
