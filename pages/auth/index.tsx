@@ -63,11 +63,11 @@ export default function Auth() {
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
     const authorizationCode = queryParams.get("code");
-    if (authorizationCode) {
-      console.log("Authorization Code:", authorizationCode);
-      fetchData(authorizationCode);
-      router.push("/timeline");
-    }
+    // if (authorizationCode) {
+    //   console.log("Authorization Code:", authorizationCode);
+    //   fetchData(authorizationCode);
+    //   router.push("/timeline");
+    // }
   }, []);
 
   const signInWithTwitter = () => {
