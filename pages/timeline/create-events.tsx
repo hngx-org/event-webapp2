@@ -114,12 +114,14 @@ export default function CreateEvents(props: {
       } else {
         setFile(URL.createObjectURL(uploadedFile));
         setImageName(uploadedFile.name);
+        console.log(URL.createObjectURL(uploadedFile));
       }
     }
   };
 
   const handleImageRemove = () => {
     setImage(null);
+    setFile("");
     setImageName("");
     const input = document.getElementById(
       "image-upload-input",
