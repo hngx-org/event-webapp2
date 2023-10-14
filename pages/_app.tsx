@@ -36,9 +36,5 @@ export default function App({ Component, pageProps }: AppProps) {
   //     };
   //   }, []);
 
-  return (
-    <AuthProvider>
-      <Component {...pageProps} />
-    </AuthProvider>
-  );
+  return <Component {...pageProps} />;
 }

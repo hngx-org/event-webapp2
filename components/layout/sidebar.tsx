@@ -4,15 +4,15 @@ import React from "react";
 import NavLinks from "./navLinks";
 import Logo from "assets/wetindeysup.png";
 import Link from "next/link";
-import { auth } from "@/config/firebase";
+// import { auth } from "@/config/firebase";
 import { useRouter } from "next/navigation";
 
 export default function Sidebar() {
   const router = useRouter();
-  const handleLogout = () => {
-    auth.signOut();
-    router.push("/timeline");
-  };
+  //   const handleLogout = () => {
+  //     auth.signOut();
+  //     router.push("/timeline");
+  //   };
   return (
     <aside className="min-w-[250px] w-[250px] bg-primary h-full hidden lg:flex lg:flex-col justify-between pb-8 rounded-r-3xl">
       <div className="w-full">
@@ -34,7 +34,7 @@ export default function Sidebar() {
       <Link href="/">
         <button
           className="flex gap-3 items-center text-white/50 font-medium px-12"
-          onClick={handleLogout}
+          //   onClick={handleLogout}
         >
           <LogoutIcon />
           <span>Log Out</span>
