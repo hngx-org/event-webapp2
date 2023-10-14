@@ -5,60 +5,63 @@ import Logo from "@/public/assets/auth/logo.svg";
 import Google from "@/public/assets/icon/Google.svg";
 import Twitter from "@/public/assets/icon/Twitter.svg";
 import PageIndicator from "@/public/assets/icon/pageIndicator.svg";
-import http from "@/http/interceptor";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { ClipLoader } from "react-spinners";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { signInWithPopup } from "firebase/auth";
-import { auth, googleProvider } from "@/config/firebase";
-import { AuthContextType } from "@/@types";
-import { AuthContext } from "@/provider/AuthProvider";
+import { LoadingSVG } from "@/components/layout/TimelineEvents";
 
 export default function Auth() {
-  const router = useRouter();
-  //   const authContext = useContext<AuthContextType | null>(AuthContext);
-  //   const user = authContext ? authContext.user : null;
+  const clientId = '69712066400-eu3ddnj8njs960htlnbh9hlgrvfg6ke9.apps.googleusercontent.com';
+  const redirectUri = 'http://localhost:3000';
   const [isLoading, setIsLoading] = useState(false);
 
-  //   useEffect(() => {
-  //     console.log(user);
-  //   }, []);
-  // const signInWithGoogle = async () => {
-  //   setIsLoading(true);
-  //   try {
-  //     const response = await http.post("/auth/google/login/");
-
-  //     if (response.status === 200) {
-  //       router.push(response.data.auth_url);
-  //     } else {
-  //       toast.error(`Authentication failed. Try Again`);
-  //     }
-  //   } catch (error: any) {
-  //     toast.error(`Authentication failed: ${error.message}`);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-  //   const signInWithGoogle = async () => {
-  //     try {
-  //       const result = await signInWithPopup(auth, googleProvider);
-  //       console.log(result.user);
-  //       router.push("/timeline");
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   const handleLogout = () => {
-  //     auth.signOut();
-  //   };
-
+  const signInWithGoogle = () =>{
+    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=email profile&access_type=offline`;
+    window.location.href = authUrl;
+  }
+  const fetchData = (authorizationCode: string)=>{
+    setIsLoading(true);
+    fetch('https://wetindeysup-api.onrender.com/api/auth/callback', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ code: authorizationCode }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setIsLoading(false);
+        console.log('Server Response:', data);
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        console.error('Fetch Error:', error);
+      });
+  }
+  useEffect(()=>{
+    const queryParams = new URLSearchParams(window.location.search);
+    const authorizationCode = queryParams.get('code');
+    if (authorizationCode) {
+      console.log('Authorization Code:', authorizationCode);
+      fetchData(authorizationCode);
+    }
+  },[])
+  
   const signInWithTwitter = () => {
     toast.error(
       "Sign in with Twitter not available right now.\nUse Google Sign in",
     );
   };
 
+  if (isLoading){
+    return <LoadingSVG/>
+  }
   return (
     <>
       <ToastContainer
@@ -118,7 +121,7 @@ export default function Auth() {
                 {/* <Link href="/timeline"> */}
                 <button
                   disabled={isLoading}
-                  //   onClick={signInWithGoogle}
+                    onClick={signInWithGoogle}
                   className="flex text-sm md:text-md justify-center w-full bg-white hover:bg-gray-100 py-4 border border-gray-400 font-semibold rounded-xl"
                 >
                   <Image
