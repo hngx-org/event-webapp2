@@ -12,4 +12,12 @@ const http = axios.create({
   },
 });
 
+// Interceptor to stringify request data
+http.interceptors.request.use(function (config) {
+  if (config.data) {
+    config.data = JSON.stringify(config.data);
+  }
+  return config;
+});
+
 export default http;

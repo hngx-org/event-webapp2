@@ -97,3 +97,11 @@ export type FormValues = {
   end_time: string;
   image: string | null;
 };
+
+export interface UserGroups {
+  created_at: string;
+  created_by: string;
+  group_name: string;
+  id: string;
+  updated_at: string;
+}
