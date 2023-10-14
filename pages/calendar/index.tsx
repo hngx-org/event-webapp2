@@ -6,10 +6,6 @@ import { useEventData } from "@/hooks/useEventData";
 
 export default function Calendar() {
   const { events, error, loading } = useEventData();
-  const [searchQuery, setSearchQuery] = useState("");
-  const handleSearchInputChange = (data: any) => {
-    setSearchQuery(data.target.value);
-  };
   return (
     <MainLayout>
       <Header
