@@ -77,7 +77,7 @@ type AuthContextType = {
 };
 
 export interface Group {
-  pk: number;
+  id: number;
   admin: string;
   created_at: string;
   updated_at: string;
