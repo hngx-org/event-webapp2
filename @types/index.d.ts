@@ -30,19 +30,32 @@ export interface UserProfs {
   name: string;
   profilePhoto: string;
 }
+// export interface EventData {
+//   id: string;
+//   creator: string;
+//   title: string;
+//   description: string;
+//   location: string;
+//   start_date: Date;
+//   group: string;
+//   end_date: Date;
+//   start_time: string;
+//   end_time: string;
+//   image: string;
+// }
 export interface EventData {
   id: string;
-  creator: string;
-  title: string;
-  description: string;
-  location: string;
-  start_date: Date;
-  group: string;
-  end_date: Date;
-  start_time: string;
-  end_time: string;
+  event_name: string;
+  event_description: string;
   image: string;
+  event_start: Date;
+  event_end: Date;
+  location: string;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
 }
+
 export interface TimelineCardProps {
   created_at: string;
   created_by: string;

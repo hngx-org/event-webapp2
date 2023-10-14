@@ -23,12 +23,12 @@ export default function Calendar() {
             <div className="p-[10px]">
               <div className="flex justify-between items-center flex-wrap">
                 <h3 className="text-[#33313E] text-lg font-bold">
-                  {event?.title}
+                  {event?.event_name}
                 </h3>
-                <p className="text-xs"> {event?.start_date.toDateString()} </p>
+                <p className="text-xs"> {event?.event_start.toDateString()} </p>
               </div>
               <p className="text-[#333333] text-base font-medium capitalize">
-                {event?.description}
+                {event?.event_description}
               </p>
             </div>
           </div>
