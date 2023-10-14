@@ -12,6 +12,7 @@ export function useEventData() {
       method: "GET",
       headers: {
         "content-type": "application/json",
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMwODUyOGM2LTgyNmUtNDQyOS1iZjVhLTgxYTkxYmFkNGU3OCIsImlhdCI6MTY5NzMwMjQ3OSwiZXhwIjoxNjk3Mzg4ODc5fQ.mtnOFBwFQ2HDKocVPLsq07Ia1jjNL83D6QH38Ld76pc'
       },
     })
       .then((response) => {
@@ -35,7 +36,7 @@ export function useEventData() {
 
   useEffect(() => {
     setLoading(true);
-    fetchData("/events/all");
+    fetchData("/events/calendar");
     setLoading(false);
   }, []);
 
