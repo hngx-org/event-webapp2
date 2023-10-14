@@ -28,7 +28,7 @@ export default function Auth() {
   const router = useRouter();
   const clientId =
     "69712066400-eu3ddnj8njs960htlnbh9hlgrvfg6ke9.apps.googleusercontent.com";
-  const redirectUri = "http://localhost:3000";
+  const redirectUri = "https://zuri-event-webapp2.vercel.app/";
   const [isLoading, setIsLoading] = useState(false);
 
   const signInWithGoogle = () => {
