@@ -12,16 +12,17 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DesktopTimePicker } from "@mui/x-date-pickers/DesktopTimePicker";
 import dayjs from "dayjs";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import XIcon from "@/components/icons/create-event/x-icon";
 import ImageUpload from "@/components/icons/create-event/image-upload";
 import Image from "next/image";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { FormValues } from "@/@types";
+import { FormValues, UserGroups } from "@/@types";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import MainLayout from "@/components/layout/mainLayout";
+import http from "@/http/interceptor";
 
 const today = dayjs().add(0, "day");
 
@@ -34,44 +35,37 @@ export default function CreateEvents(props: {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
-  const [image, setImage] = useState<string | null>(null);
-  const [imageName, setImageName] = useState<string | null>(null);
+  const [image, setImage] = useState<string | null>("null");
+  const [imageName, setImageName] = useState<string>("");
   const [startDate, setStartDate] = useState<dayjs.Dayjs | null>(null);
   const [endDate, setEndDate] = useState<dayjs.Dayjs | null>(today);
   const [startTime, setStartTime] = useState<dayjs.Dayjs | null>(today);
   const [endTime, setEndTime] = useState<dayjs.Dayjs | null>(today);
+  const [groups, setGroups] = useState<UserGroups[]>([]);
   const router = useRouter();
+  const [file, setFile] = useState("");
 
+  const fetchGroups = async () => {
+    const response = await http.get("/groups");
+    setGroups(response.data.userGroups);
+  };
+  useEffect(() => {
+    fetchGroups();
+  }, []);
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    const eventData = {
+      event_name: data.title,
+      event_description: data.description,
+      location: data.location,
+      groupId: data.group,
+      event_start: startTime ? startTime.toISOString() : "",
+      event_end: endTime ? endTime.toISOString() : "",
+      image: file,
+    };
     try {
-      const eventData = {
-        title: data.title,
-        description: data.description,
-        location: data.location,
-        group: data.group,
-        start_date: startDate ? startDate.toISOString() : "",
-        end_date: endDate ? endDate.toISOString() : "",
-        start_time: startTime ? startTime.toISOString() : "",
-        end_time: endTime ? endTime.toISOString() : "",
-        image: data.image || null,
-      };
-
-      console.log("Data to be sent:", eventData);
-
-      const response = await fetch(
-        "https://events-be-python-psi.vercel.app/api/events/",
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(eventData),
-        },
-      );
+      const response = await http.post("/events", eventData);
 
       if (response.status === 201) {
-        console.log("Event created successfully.");
         toast.success("Event created successfully", {
           position: "top-right",
           autoClose: 5000,
@@ -109,30 +103,26 @@ export default function CreateEvents(props: {
   };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      if (!file.type.startsWith("image/")) {
-        alert("Please select an image file.");
-        return;
-      }
+    const uploadedFile = event.target.files?.[0];
+    // console.log(e.target);
 
-      if (file.size > 5 * 1024 * 1024) {
-        alert("Image size should not exceed 5MB.");
-        return;
+    if (uploadedFile) {
+      const fileSize = uploadedFile.size / 1024 / 1024; //To convert to MB
+      if (fileSize > 5) {
+        alert("File size must be greater than 5MB.");
+        event.target.value = "";
+      } else {
+        setFile(URL.createObjectURL(uploadedFile));
+        setImageName(uploadedFile.name);
+        console.log(URL.createObjectURL(uploadedFile));
       }
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        setImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-      setImageName(file.name);
     }
   };
 
   const handleImageRemove = () => {
     setImage(null);
-    setImageName(null);
+    setFile("");
+    setImageName("");
     const input = document.getElementById(
       "image-upload-input",
     ) as HTMLInputElement;
@@ -143,7 +133,7 @@ export default function CreateEvents(props: {
 
   return (
     <MainLayout title="Create Event">
-      <div className="h-full lg:pt-6 lg:rounded-none xsm:rounded-3xl lg:m-0 xsm:m-4 xsm:bg-white lg:bg-brand-gray-100">
+      <div className="h-full lg:py-6 rounded-3xl lg:rounded-none bg-brand-gray-100">
         <div className="flex items-center gap-6">
           <ToastContainer
             position="top-right"
@@ -210,17 +200,17 @@ export default function CreateEvents(props: {
             </label>
             <div className="flex flex-grow px-2 py-4 items-center gap-2 rounded-2xl border-2 border-black bg-brand-gray-100">
               <div className="text-center flex items-center ">
-                {image ? (
+                {file ? (
                   <>
                     <Image
-                      src={image}
+                      src={file}
                       alt="Uploaded"
                       height={24}
                       width={24}
                       className="rounded items-center h-full"
                     />
                     <div className="flex justify-between w-full">
-                      <p>{imageName}</p>
+                      {imageName && <p>{imageName}</p>}
                       <button
                         onClick={handleImageRemove}
                         className="remove-button"
@@ -242,7 +232,7 @@ export default function CreateEvents(props: {
                   id="image-upload-input"
                   className="hidden"
                 />
-                {image ? null : (
+                {file ? null : (
                   <label
                     htmlFor="image-upload-input"
                     className="cursor-pointer text-[#9CA3AF]  max-w-[347px]"
@@ -286,8 +276,16 @@ export default function CreateEvents(props: {
                     required: "Event group is required", // Required validation
                   })}
                 >
-                  <option className="text-[#9CA3AF]">Enter event group</option>
-                  <option value="0">0</option>
+                  <option className="text-[#9CA3AF]" disabled selected>
+                    Enter event group
+                  </option>
+                  {groups.map((group) => {
+                    return (
+                      <option key={group.group_name} value={group.id}>
+                        {group.group_name}
+                      </option>
+                    );
+                  })}
                 </select>
               </div>
               {errors.group && (

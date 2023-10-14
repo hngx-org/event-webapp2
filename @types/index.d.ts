@@ -90,7 +90,7 @@ type AuthContextType = {
 };
 
 export interface Group {
-  pk: number;
+  id: number;
   admin: string;
   created_at: string;
   updated_at: string;
@@ -110,3 +110,11 @@ export type FormValues = {
   end_time: string;
   image: string | null;
 };
+
+export interface UserGroups {
+  created_at: string;
+  created_by: string;
+  group_name: string;
+  id: string;
+  updated_at: string;
+}
