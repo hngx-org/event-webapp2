@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Rectangle31 from "../public/Rectangle31.png";
 import Rectangle32 from "../public/Rectangle32.png";
 import { GroupRectangleSVG, NextBtnSVG } from "./layout/TimelineEvents";
+import moment from "moment";
 
 const TimeLineEventCard = ({
   created_at,
@@ -67,8 +68,8 @@ const TimeLineEventCard = ({
     <div className={`py-6 px-4 rounded-2xl ${renderBg}`}>
       <Image
         src={image || renderBgImg}
-        width={100}
-        height={100}
+        width={1080}
+        height={400}
         className="w-full aspect-video rounded-2xl object-cover"
         alt=""
       />
@@ -79,7 +80,8 @@ const TimeLineEventCard = ({
           </h2>
           <h6 className="mt-3">{convertDate(event_end)}</h6>
           <p className="mt-3 opacity-70">
-            {getDay(event_end)}, {event_start} - {event_end}
+            {getDay(event_end)}, {moment(event_start).format("hh:mm")} -{" "}
+            {moment(event_end).format("hh:mm")}
           </p>
           <p className="mt-3 font-normal capitalize">
             {location || "Unlnown Location"}

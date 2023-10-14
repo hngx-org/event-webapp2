@@ -143,7 +143,7 @@ export default function CreateEvents(props: {
 
   return (
     <MainLayout title="Create Event">
-      <div className="h-full  lg:pt-14 xsm:p-8 lg:rounded-none xsm:rounded-3xl lg:m-0 xsm:m-4 xsm:bg-white lg:bg-brand-gray-100">
+      <div className="h-full lg:pt-6 lg:rounded-none xsm:rounded-3xl lg:m-0 xsm:m-4 xsm:bg-white lg:bg-brand-gray-100">
         <div className="flex items-center gap-6">
           <ToastContainer
             position="top-right"
