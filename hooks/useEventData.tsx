@@ -12,6 +12,7 @@ export function useEventData() {
       method: "GET",
       headers: {
         "content-type": "application/json",
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMwODUyOGM2LTgyNmUtNDQyOS1iZjVhLTgxYTkxYmFkNGU3OCIsImlhdCI6MTY5NzMwMjQ3OSwiZXhwIjoxNjk3Mzg4ODc5fQ.mtnOFBwFQ2HDKocVPLsq07Ia1jjNL83D6QH38Ld76pc'
       },
     })
       .then((response) => {
@@ -23,8 +24,8 @@ export function useEventData() {
       .then((response: EventData[]) => {
         const formattedData = response.map((event) => ({
           ...event,
-          start_date: new Date(`${event.start_date}T${event.start_time}`),
-          end_date: new Date(`${event.end_date}T${event.end_time}`),
+          event_start: new Date(`${event.event_start}`),
+         event_end: new Date(`${event.event_end}`),
         }));
         setEventData(formattedData);
       })
@@ -35,7 +36,7 @@ export function useEventData() {
 
   useEffect(() => {
     setLoading(true);
-    fetchData("/events/all");
+    fetchData("/events/calendar");
     setLoading(false);
   }, []);
 
