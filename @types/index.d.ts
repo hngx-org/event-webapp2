@@ -57,17 +57,16 @@ export interface EventData {
 }
 
 export interface TimelineCardProps {
-  creator: string,
-  description: string,
-  end_date: string,
-  end_time: string,
-  group: number,
-  id: string,
-  image: string,
-  location: string,
-  start_date: string,
-  start_time: string,
-  title: string,
+  created_at: string;
+  created_by: string;
+  event_description: string;
+  event_end: string;
+  event_name: string;
+  event_start: string;
+  id: string;
+  image: string;
+  location: string;
+  updated_at: string;
 }
 
 export interface cardItem {
@@ -78,7 +77,7 @@ export interface cardItem {
 }
 
 export interface MyPeopleProps {
-  id: number,
+  id: number;
   bgColor: string;
   imgSrc: any;
   name: string;
@@ -91,13 +90,13 @@ type AuthContextType = {
 };
 
 export interface Group {
-  pk: number,
-  admin: string,
-  created_at: string,
-  updated_at: string,
-  image: string,
-  group_name: string,
-  friends: number[]
+  pk: number;
+  admin: string;
+  created_at: string;
+  updated_at: string;
+  image: string;
+  group_name: string;
+  friends: number[];
 }
 
 export type FormValues = {
@@ -110,4 +109,4 @@ export type FormValues = {
   start_time: string;
   end_time: string;
   image: string | null;
-}
+};
