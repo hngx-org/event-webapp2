@@ -26,10 +26,16 @@ const http = axios.create({
 
 // Interceptor to stringify request data
 http.interceptors.request.use(function (config) {
+  const token = Cookies.get("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
   if (config.data) {
     config.data = JSON.stringify(config.data);
   }
-  return config;
+
+  return config; // Make sure to return the modified config object
 });
 
 export default http;
