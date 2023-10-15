@@ -60,10 +60,15 @@ export default function Auth() {
     const authorizationCode = queryParams.get("code");
     if (authorizationCode) {
       console.log("Authorization Code:", authorizationCode);
-      const data = await fetchData(authorizationCode);
-      if (data) {
-        router.push("/timeline");
-      }
+      await localStorage.setItem(
+        "token",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM1MDM3YWQ3LWVkMmEtNDRmYS05MzNiLWViOWZmYjM2NWM1YSIsImlhdCI6MTY5NzI5NjgyMywiZXhwIjoxNjk3MzgzMjIzfQ.WkrPI6s0fj_ZXmLZBOAfZxt_z5BrOaQLce1VQJqvY7M",
+      );
+      router.push("/timeline");
+      //   const data = await fetchData(authorizationCode);
+      //   if (data) {
+      //     router.push("/timeline");
+      //   }
     }
   };
   useEffect(() => {
