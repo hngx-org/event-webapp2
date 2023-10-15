@@ -24,8 +24,7 @@ function MainLayout({ children, title }: MainLayoutProps) {
     setState({ ...state, [anchor]: open });
   };
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    http.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    const token = Cookies.get("token");
     if (!token) {
       router.push("/");
     }
