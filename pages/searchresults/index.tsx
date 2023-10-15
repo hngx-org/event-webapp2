@@ -128,7 +128,7 @@ export default function Index() {
             {
               
               bg: "bg-[#FFE0C4]",
-              imgSrc: Rectangle30,
+              imgSrc: `${data.image}`,
               name: `${data.event_name}`,
               date: `${data.event_start}`,
               time: `${data.event_end}`,
@@ -137,7 +137,7 @@ export default function Index() {
           ];
           const pitchData = pitchArray.map((item, index) => (
             <div key={index} className={`py-6 px-4 rounded-2xl ${item.bg}`}>
-              <Image src={item.imgSrc} className="w-full" alt="" />
+              <Image src={item.imgSrc} className="w-full" alt="" width={100} height={100} />
               <div className="relative mt-4 flex justify-between gap-3">
                 <span className="text-black font-sans font-medium text-base">
                   <h2 className="font-sans text-xl font-bold text-[#3F3849]">
@@ -180,7 +180,7 @@ export default function Index() {
                 <p className="items-center text-gray-500">your entry and try again.</p>
                 <Button
                 className="pt-4 pb-4 pl-4 pr-4 bg-pink-400  mt-8  rounded-2xl"
-                href="https://zuri-events-app.vercel.app/timeline"
+                href="/timeline"
                 >
                 <Image
                     alt="vector"
