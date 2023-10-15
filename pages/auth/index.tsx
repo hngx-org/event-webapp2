@@ -24,9 +24,10 @@ export default function Auth() {
   const router = useRouter();
   const clientId =
     "69712066400-eu3ddnj8njs960htlnbh9hlgrvfg6ke9.apps.googleusercontent.com";
-  const redirectUri = "https://zuri-event-webapp2.vercel.app/";
+  // const redirectUri = "http://localhost:3000";
+  const redirectUri = "https://zuri-event-webapp2.vercel.app";
   const [isLoading, setIsLoading] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+
   const signInWithGoogle = () => {
     const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=email profile&access_type=offline`;
     window.location.href = authUrl;
@@ -35,48 +36,47 @@ export default function Auth() {
   const fetchData = async (authorizationCode: string) => {
     setIsLoading(true);
     try {
-      const response = await axios.post(
-        "https://wetindeysup-api.onrender.com/api/auth/callback",
-        JSON.stringify({ code: authorizationCode }),
+      // const callBackURL = "http://localhost:8080/api/auth/callback";
+      const callBackURL =
+        "https://zuri-event-webapp2.vercel.app/api/auth/callback";
+      const response = await axios.get(
+        `${callBackURL}?code=${authorizationCode}`,
       );
-      console.log(response);
+      console.log(response.data);
 
       if (response) {
         setIsLoading(false);
-        console.log("Server Response:", response);
+        // Save token and user info
         localStorage.setItem("token", response.data.token);
-        setUser(response.data);
-        localStorage.setItem("user", JSON.stringify(response.data));
-        return response.data;
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        console.log("push:", response.data);
+        router.push("/timeline");
       }
     } catch (error: any) {
       setIsLoading(false);
       console.error(error);
+      router.push("/");
+      toast.error(error || "Login failed! Try again");
     }
   };
 
   const authorizeUser = async () => {
     const queryParams = new URLSearchParams(window.location.search);
     const authorizationCode = queryParams.get("code");
+
     if (authorizationCode) {
       console.log("Authorization Code:", authorizationCode);
-      await localStorage.setItem(
-        "token",
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM1MDM3YWQ3LWVkMmEtNDRmYS05MzNiLWViOWZmYjM2NWM1YSIsImlhdCI6MTY5NzI5NjgyMywiZXhwIjoxNjk3MzgzMjIzfQ.WkrPI6s0fj_ZXmLZBOAfZxt_z5BrOaQLce1VQJqvY7M",
-      );
-      router.push("/timeline");
-      //   const data = await fetchData(authorizationCode);
-      //   if (data) {
-      //     router.push("/timeline");
-      //   }
+      await fetchData(authorizationCode);
     }
   };
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       router.push("/timeline");
+    } else {
+      authorizeUser();
     }
-    authorizeUser();
   }, []);
 
   const signInWithTwitter = () => {
