@@ -29,7 +29,7 @@ const override: CSSProperties = {
 const validationSchema = yup.object().shape({
   firstName: yup.string().required("Required"),
   //   lastName: yup.string().required("Required"),
-  //   email: yup.string().required("Required"),
+  email: yup.string().email("Invalid email").required("Required"),
   //   roles: yup
   //     .array()
   //     .of(yup.string().required("At least one role is required"))
@@ -48,9 +48,10 @@ export default function CreateNewGroup() {
   const [errMsg, setErrMsg] = useState("");
   //const [addedFriends, setAddedFriends] = useState("");
   const [groupName, setGroupName] = useState("");
-  const [friendEmail, setFriendEmail] = useState("");
+  const [friendEmail, setFriendEmail] = useState<string>("");
+  const [friendEmails, setFriendEmails] = useState<string[]>([]);
   const [isCreatingGroup, setIsCreatingGroup] = useState(false);
-  const [isAddingFriend, setIsAddingFriend] = useState(false);
+  // const [isAddingFriend, setIsAddingFriend] = useState(false);
 
   function uploadImage(e: any) {
     const uploadedFile = e.target.files[0];
@@ -74,6 +75,10 @@ export default function CreateNewGroup() {
 
   function closeModal() {
     setIsOpen(false);
+    setGroupName("");
+    setFile("");
+    setFriendEmail("")
+    setFriendEmails([])
   }
 
   function openModal() {
@@ -84,18 +89,19 @@ export default function CreateNewGroup() {
     1;
   };
 
+  // function to create a new group
   const createNewGroup = async () => {
     try {
       setIsCreatingGroup(true);
       const response = await http.post('/groups', {
         group_name: groupName,
-        emails: [friendEmail],
+        emails: friendEmails,
       });
 
       if (response.status === 201) {
         setSuccessMsg('Group created successfully!');
         setGroupName('');
-        setFriendEmail('');
+        setFriendEmails([]);
       } 
     } catch (error) {
       setErrMsg('Error creating group. Please try again.');
@@ -106,22 +112,13 @@ export default function CreateNewGroup() {
     }
   };
 
-  const addFriendToGroup = async (groupId: any) => {
-    try {
-      setIsAddingFriend(true);
-      const response = await http.post(`/groups/${groupId}/addUser`, {
-        email: friendEmail,
-      });
-      
-      if (response.status === 201) {
-        setSuccessMsg('Friend added successfully!');
-        setFriendEmail('');
-      }
-    } catch (error) {
-      // setErrMsg('Please fill all data');
-      console.error(error)
-    } finally {
-      setIsAddingFriend(false);
+  // function to add friend emails to an array
+  const addFriendToGroup = () => {
+    if (friendEmail) {
+      setFriendEmails((prevEmails) => [...prevEmails, friendEmail]);
+      setSuccessMsg('Friend added successfully!');
+      setFriendEmail("");
+      console.log(friendEmails)
     }
   };
 
