@@ -60,14 +60,15 @@ export default function CreateEvents(props: {
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     console.log(data);
 
-    const eventData = new FormData();
-    eventData.append("event_name", data.title);
-    eventData.append("event_description", data.description);
-    eventData.append("location", data.location);
-    eventData.append("groupId", data.group);
-    eventData.append("event_start", startTime ? startTime.toISOString() : "");
-    eventData.append("event_end", endTime ? endTime.toISOString() : "");
-    eventData.append("image", uploadedFile || "");
+    const formData = new FormData();
+    formData.append("event_name", data.title);
+    formData.append("event_description", data.description);
+    formData.append("location", data.location);
+    formData.append("event_start", startTime ? startTime.toISOString() : "");
+    formData.append("event_end", endTime ? endTime.toISOString() : "");
+    formData.append("image", uploadedFile || "");
+    const groupId = { groupId: data.group };
+    const eventData = { ...Object.fromEntries(formData), ...groupId };
 
     try {
       // const response = await http.post("/events", eventData);
@@ -106,8 +107,9 @@ export default function CreateEvents(props: {
         });
       }
     } catch (error) {
-      console.error("An error occurred:", error);
-      toast.error("An error occurred", {
+      console.error("An error occurred:", error.response.data);
+      const errorMessage = error.response?.data?.error || "An error occurred";
+      toast.error(errorMessage, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
