@@ -106,7 +106,7 @@ export default function CreateEvents(props: {
           theme: "light",
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("An error occurred:", error.response.data);
       const errorMessage = error.response?.data?.error || "An error occurred";
       toast.error(errorMessage, {
