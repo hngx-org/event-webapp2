@@ -6,8 +6,12 @@ import SearchBar from "@/components/searchBar";
 import { AuthContextType, HeaderProps } from "@/@types";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { AuthContext } from "@/provider/AuthProvider";
+import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
 
 export default function Header({ title, info }: HeaderProps) {
+  const Router = useRouter();
+  const { token, user } = useAuth();
   return (
     <header className="w-full flex justify-between h-max sticky top-0 bg-brand-gray-100 z-20 p-4 lg:py-10 lg:px-0 gap-4">
       {/* Title section */}
@@ -36,14 +40,16 @@ export default function Header({ title, info }: HeaderProps) {
       <div className="flex gap-2 items-center">
         <div className="w-12 h-12 rounded-full overflow-hidden">
           <Image
-            src={Avatar}
+            src={user?.avatar as string}
             alt="logo"
             width={200}
             height={200}
             className="w-full h-full object-cover"
           />
         </div>
-        <p className="hidden md:inline-flex font-semibold text-lg">Salome</p>
+        <p className="hidden md:inline-flex font-semibold text-lg capitalize">
+          {user?.username}
+        </p>
       </div>
     </header>
   );
