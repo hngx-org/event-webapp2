@@ -20,7 +20,6 @@ type dataRes = {
 };
 
 export default function Auth() {
-  const { token } = useAuth();
   const router = useRouter();
   const clientId =
     "69712066400-eu3ddnj8njs960htlnbh9hlgrvfg6ke9.apps.googleusercontent.com";
@@ -47,11 +46,11 @@ export default function Auth() {
         return response.json();
       })
       .then((data: dataRes) => {
-        setIsLoading(false);
         console.log("Server Response:", data);
         localStorage.setItem("token", data.data.token);
         setUser(data.data);
         localStorage.setItem("user", JSON.stringify(data.data));
+        setIsLoading(false);
       })
       .catch((error) => {
         setIsLoading(false);
@@ -82,9 +81,6 @@ export default function Auth() {
 
   if (isLoading) {
     return <LoadingSVG />;
-  }
-  if (token) {
-    router.push("/timeline");
   }
   return (
     <>
