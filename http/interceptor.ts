@@ -3,24 +3,24 @@ import Cookies from "js-cookie";
 
 // axios config for server
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
-const token = async () => {
-  const token = await Cookies.get("token");
-  if (token) {
-    return token;
-  } else {
-    setTimeout(() => {
-      const newToken = Cookies.get("token");
-      return newToken;
-    }, 500); // Adjust the delay as needed
-  }
-};
+// const token = async () => {
+//   const token = await Cookies.get("token");
+//   if (token) {
+//     return token;
+//   } else {
+//     setTimeout(() => {
+//       const newToken = Cookies.get("token");
+//       return newToken;
+//     }, 500); // Adjust the delay as needed
+//   }
+// };
 
 const http = axios.create({
   baseURL: API_URL,
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${token()}`,
+    Authorization: `Bearer ${Cookies.get("token")}`,
   },
 });
 
