@@ -72,6 +72,10 @@ export default function Auth() {
     }
   };
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      router.push("/timeline");
+    }
     authorizeUser();
   }, []);
 
