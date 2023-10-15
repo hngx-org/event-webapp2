@@ -118,3 +118,11 @@ export interface UserGroups {
   id: string;
   updated_at: string;
 }
+
+export interface User {
+  avatar: string;
+  email: string;
+  id: string;
+  token: string;
+  username: string;
+};
