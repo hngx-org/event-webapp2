@@ -55,15 +55,12 @@ export default function Auth() {
     } catch (error: any) {
       setIsLoading(false);
       console.error(error);
-      router.push("/");
+      // router.push("/");
       toast.error(error || "Login failed! Try again");
     }
   };
 
-  const authorizeUser = async () => {
-    const queryParams = new URLSearchParams(window.location.search);
-    const authorizationCode = queryParams.get("code");
-
+  const authorizeUser = async (authorizationCode: any) => {
     if (authorizationCode) {
       console.log("Authorization Code:", authorizationCode);
       await fetchData(authorizationCode);
@@ -75,7 +72,12 @@ export default function Auth() {
     if (token) {
       router.push("/timeline");
     } else {
-      authorizeUser();
+      const queryParams = new URLSearchParams(window.location.search);
+      const authorizationCode = queryParams.get("code");
+      if (authorizationCode) {
+        localStorage.setItem("authorizationCode", authorizationCode);
+        authorizeUser(authorizationCode);
+      }
     }
   }, []);
 

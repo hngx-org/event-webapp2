@@ -5,14 +5,18 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'res.cloudinary.com'
+        protocol: "https",
+        hostname: "res.cloudinary.com",
       },
       {
         protocol: "https",
-        hostname: "events-be-python-psi.vercel.app",
+        hostname: "lh3.googleusercontent.com",
       },
-    ]
+      {
+        protocol: "https",
+        hostname: "wetindeysup-api.onrender.com",
+      },
+    ],
   },
   async rewrites() {
     return [
@@ -23,5 +27,4 @@ const nextConfig = {
     ];
   },
 };
-
 module.exports = nextConfig;
