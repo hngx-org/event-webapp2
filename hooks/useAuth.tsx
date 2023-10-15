@@ -1,5 +1,6 @@
 import { User } from "@/@types";
 import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
@@ -8,8 +9,8 @@ export function useAuth() {
 
   useEffect(() => {
     setLoading(true);
-    const myToken = localStorage.getItem("token");
-    const myUser = localStorage.getItem("user");
+    const myToken = Cookies.get("token");
+    const myUser = Cookies.get("user");
 
     if (myToken) {
       setToken(myToken);
