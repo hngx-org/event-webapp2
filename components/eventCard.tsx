@@ -15,6 +15,7 @@ export default function EventCard({
   comments,
   event,
 }: EventCardProps) {
+  console.log(event)
   const date = new Date(event.event_start);
   const formattedDate = convertDateFormat(event.event_start);
   const weekDay = date.toLocaleDateString("en-US", { weekday: "long" });
@@ -50,7 +51,7 @@ export default function EventCard({
         <div className="flex items-center md:items-start md:flex-col gap-2 md:gap-3">
           <div className="w-[70px] h-[70px] md:w-full md:h-[140px] relative z-10 bg-neutral-400 rounded-full md:rounded-2xl">
             <Image
-              src={event.image || PitchImage}
+              src={event.image || 'https://res.cloudinary.com/dssemh4yp/image/upload/v1697385858/chpx38k9tqvhcqcdkazv.png'}
               alt="Football Pitch"
               width={270}
               height={160}

@@ -57,7 +57,7 @@ export interface Event {
   event_end: string;
   event_start: string;
   event_end: string;
-  image: string | null;
+  image: string ;
 }
 
 export interface UserProfs {

@@ -27,7 +27,7 @@ export default function PeopleDetails() {
     "bg-brand-pink-500",
     "bg-brand-purple-300",
   ];
-    const fetchData = () => fetch(`https://wetindeysup-api.onrender.com/api/groups/events/27c3c6fc-1538-41e0-92b8-eed07d4847c5`)
+    const fetchData = () => fetch(`https://wetindeysup-api.onrender.com/api/groups/events/${id}`)
     .then(res => res.json())
     .then(res => {
       console.log(res.data)
@@ -43,11 +43,9 @@ console.log(data[0])
   return (
     <MainLayout >
         <PeopleHeader
-        // image={data[0].image}
         numberOfEvents={data.length}
-        //groupName={data[0].location}
       /> 
-       {data.length ?? 0 > 0 ? (
+       {data.length > 0 ? (
         <div className="w-full max-w-[714px] mx-auto min-[1230px]:max-w-[998px] px-2 md:p-6 flex gap-6 flex-wrap min-[1230px]:flex-nowrap md:bg-brand-gray-300 md:rounded-2xl">
           {data.map((event:any, index:number) => {
             const randomNumber = Math.floor(Math.random() * otherColors.length);
