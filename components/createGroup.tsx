@@ -2,6 +2,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import http from "@/http/interceptor";
 import "react-toastify/dist/ReactToastify.css";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -40,11 +41,16 @@ const validationSchema = yup.object().shape({
   //   number: yup.number(),
 });
 
-export default function CreateGroup() {
+export default function CreateNewGroup() {
   const [isOpen, setIsOpen] = useState(false);
   const [file, setFile] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
   const [errMsg, setErrMsg] = useState("");
-  const [addedFriends, setAddedFriends] = useState("");
+  //const [addedFriends, setAddedFriends] = useState("");
+  const [groupName, setGroupName] = useState("");
+  const [friendEmail, setFriendEmail] = useState("");
+  const [isCreatingGroup, setIsCreatingGroup] = useState(false);
+  const [isAddingFriend, setIsAddingFriend] = useState(false);
 
   function uploadImage(e: any) {
     const uploadedFile = e.target.files[0];
@@ -77,6 +83,48 @@ export default function CreateGroup() {
   const onSubmit = () => {
     1;
   };
+
+  const createNewGroup = async () => {
+    try {
+      setIsCreatingGroup(true);
+      const response = await http.post('/groups', {
+        group_name: groupName,
+        emails: [friendEmail],
+      });
+
+      if (response.status === 201) {
+        setSuccessMsg('Group created successfully!');
+        setGroupName('');
+        setFriendEmail('');
+      } 
+    } catch (error) {
+      setErrMsg('Error creating group. Please try again.');
+      console.error(error)
+    } finally {
+      setIsCreatingGroup(false);
+      closeModal();
+    }
+  };
+
+  const addFriendToGroup = async (groupId: any) => {
+    try {
+      setIsAddingFriend(true);
+      const response = await http.post(`/groups/${groupId}/addUser`, {
+        email: friendEmail,
+      });
+      
+      if (response.status === 201) {
+        setSuccessMsg('Friend added successfully!');
+        setFriendEmail('');
+      }
+    } catch (error) {
+      // setErrMsg('Please fill all data');
+      console.error(error)
+    } finally {
+      setIsAddingFriend(false);
+    }
+  };
+
   return (
     <>
       <button
@@ -150,6 +198,8 @@ export default function CreateGroup() {
                                 label="Group Name"
                                 type="name"
                                 placeholder="Enter a group name"
+                                value={groupName}
+                                onChange={(e: any) => setGroupName(e.target.value)}
                               />
                               {file ? (
                                 <>
@@ -224,8 +274,10 @@ export default function CreateGroup() {
                                     autoComplete="off"
                                     className="w-full p-4 rounded-2xl border-2 border-black placeholder:text-brand-gray-400 font-medium"
                                     placeholder="Enter friend’s email address"
+                                    value={friendEmail}
+                                    onChange={(e: any) => setFriendEmail(e.target.value)}
                                   />
-                                  <button className="absolute top-4 right-4 font-bold underline bg-white px-2">
+                                  <button onClick={addFriendToGroup}  type="submit" className="absolute top-4 right-4 font-bold underline bg-white px-2">
                                     Add friend
                                   </button>
                                 </div>
@@ -271,6 +323,7 @@ export default function CreateGroup() {
                                 <button
                                   type="submit"
                                   disabled={formik.isSubmitting}
+                                  onClick={createNewGroup}
                                   className="block w-full bg-primary text-white rounded-[5px] py-[14px] font-semibold relative overflow-hidden"
                                 >
                                   {formik.isSubmitting && (

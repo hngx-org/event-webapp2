@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { SearchIcon } from "@/public/assets/icon/searchIcon";
 import { BackArrowIcon } from "@/public/assets/icon/peopleIcon";
 import { title } from "process";
@@ -15,7 +16,8 @@ export default function PeopleHeader({
     <header className="w-full flex justify-between h-max sticky top-0 bg-brand-gray-100 z-20 py-10">
       {/* Title section */}
       <div className="flex items-center gap-2">
-        <Link href="/groups" className="">
+
+        <Link href="/groups">
           <BackArrowIcon />
         </Link>
         <div className="">
