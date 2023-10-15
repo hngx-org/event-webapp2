@@ -1,7 +1,7 @@
 export interface MainLayoutProps {
   children?: React.ReactNode;
   title?: string;
-  //   className?: React.ComponentProps<"div">["className"];
+  //   className?: React.ComponentProps<div>[className];
 }
 
 export interface HeaderProps {
@@ -23,7 +23,41 @@ export interface EventCardProps {
   textColor?: string;
   btnColor?: string;
   comments?: boolean;
-  img?: string;
+  event: Event;
+}
+export interface GroupEventProps {
+  image?: string | null;
+  groupName?: string;
+  numberOfEvents: number;
+}
+
+export type SingleGroup = {
+  group?: Group;
+  events?: Event[];
+};
+
+interface Group {
+  pk: number;
+  group_name: string;
+  admin: string;
+  image: string | null;
+  friends: number[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Event {
+  id: string;
+  created_by: string;
+  event_name: string;
+  event_description: string;
+  location: string;
+  event_start: string;
+  group: number;
+  event_end: string;
+  event_start: string;
+  event_end: string;
+  image: string ;
 }
 
 export interface UserProfs {

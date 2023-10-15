@@ -5,6 +5,7 @@ import Link from "next/link";
 import { MyPeopleProps } from "@/@types";
 import { GroupRectangleSVG } from "./layout/TimelineEvents";
 
+
 const MyPeopleCard = ({ bgColor, imgSrc, name, events, id }: MyPeopleProps) => {
   return (
     <Link

@@ -13,52 +13,62 @@ export default function EventCard({
   textColor,
   btnColor,
   comments,
-  img,
+  event,
 }: EventCardProps) {
-  const colors = [
-    "bg-brand-purple-300",
-    "bg-brand-blue-300",
-    "bg-brand-pink-500",
-    "bg-brand-pink-400",
-  ];
-  // md:min-w-[320px] min-[980px]:min-w-0 min-[1230px]:max-w-[300px]
+  console.log(event)
+  const date = new Date(event.event_start);
+  const formattedDate = convertDateFormat(event.event_start);
+  const weekDay = date.toLocaleDateString("en-US", { weekday: "long" });
+  const startTime = event.event_start.slice(0, -3);
+  const endTime = event.event_end.slice(0, -3);
+
+  function convertDateFormat(dateString: string): string {
+    // Create a new Date object from the dateString
+    let date = new Date(dateString);
+
+    // Extract the day, month and year from the date object
+    let day: string | number = date.getDate();
+    let month: string | number = date.getMonth() + 1; // Month is zero-based, so add one
+    let year = date.getFullYear();
+
+    // Add leading zeros if needed
+    if (day < 10) {
+      day = `0${day}`;
+    }
+    if (month < 10) {
+      month = `0${month}`;
+    }
+
+    // Return the formatted date string using template literals
+    return `${day}/${month}/${year}`;
+  }
+
   return (
     <div className="w-full max-w-[380px] md:max-w-[320px] min-[1230px]:max-w-[300px] mx-auto md:mx-0 font-sans overflow-hidden min-[1024px]:max-w-[293px] min-[1112px]:max-w-[320px]">
       <div
-        className={`${bgColor} ${textColor} pr-4 py-4  md:pl-4 md:pt-6 md:pb-3 rounded-t-2xl text-base border border-b-0 border-black md:border-none`}
+        className={`${bgColor} ${textColor} px-4 py-4 md:pl-4 md:pt-6 md:pb-3 rounded-t-2xl text-base border border-b-0 border-black md:border-none`}
       >
-        <div className="flex items-center md:items-start md:flex-col md:space-y-3">
-          <div className="w-[90px] h-[90px] md:w-full md:h-[140px] relative z-10">
+        <div className="flex items-center md:items-start md:flex-col gap-2 md:gap-3">
+          <div className="w-[70px] h-[70px] md:w-full md:h-[140px] relative z-10 bg-neutral-400 rounded-full md:rounded-2xl">
             <Image
-              src={FootballImage}
-              alt="Football"
-              width={270}
-              height={160}
-              className="md:hidden object-cover w-full h-full rounded-full md:rounded-2xl"
-            />
-            <Image
-              src={img || PitchImage}
+              src={event.image || 'https://res.cloudinary.com/dssemh4yp/image/upload/v1697385858/chpx38k9tqvhcqcdkazv.png'}
               alt="Football Pitch"
               width={270}
               height={160}
-              className="hidden md:block object-cover w-full h-full rounded-full md:rounded-2xl"
+              className="object-cover w-full h-full rounded-full md:rounded-2xl"
             />
           </div>
           <div className="relative flex justify-between max-md:flex-1 w-full">
             <div className="md:space-y-1">
               <div className="font-bold font-sans md:font-monserrat text-lg md:text-xl tracking-[0.2px] md:text-primary">
-                Football Game
+                {event.event_name}
               </div>
-              <div className="font-medium md:hidden">May 20, 2023</div>
-              <div className="font-medium hidden md:block">20th May, 2023</div>
-              <div className="font-bold text-xs md:text-base md:font-medium opacity-70 md:hidden">
-                Friday, 4 - 6 PM
-              </div>
-              <div className="font-medium md:opacity-70 hidden md:block">
-                Friday, 16:00-18:00
+              <div className="font-medium">{formattedDate}</div>
+              <div className="font-medium text-xs md:text-base md:opacity-70">
+                {`${weekDay}, ${startTime}-${endTime}`}
               </div>
               <div className="font-medium md:font-normal md:opacity-80 text-[15px] md:text-base">
-                Teslim Balogun Stadium
+                {event.location || "Unknown"}
               </div>
             </div>
             <div className="flex items-end md:items-center">
