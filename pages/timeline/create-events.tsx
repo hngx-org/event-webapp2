@@ -23,6 +23,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import MainLayout from "@/components/layout/mainLayout";
 import http from "@/http/interceptor";
+import axios from "axios";
 
 const today = dayjs().add(0, "day");
 
@@ -35,6 +36,7 @@ export default function CreateEvents(props: {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
+
   const [image, setImage] = useState<string | null>("null");
   const [imageName, setImageName] = useState<string>("");
   const [startDate, setStartDate] = useState<dayjs.Dayjs | null>(null);
@@ -44,26 +46,41 @@ export default function CreateEvents(props: {
   const [groups, setGroups] = useState<UserGroups[]>([]);
   const router = useRouter();
   const [file, setFile] = useState("");
+  const [uploadedFile, setUploadedFile] = useState("");
 
   const fetchGroups = async () => {
     const response = await http.get("/groups");
     setGroups(response.data.userGroups);
   };
+
   useEffect(() => {
     fetchGroups();
   }, []);
+
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    const eventData = {
-      event_name: data.title,
-      event_description: data.description,
-      location: data.location,
-      groupId: data.group,
-      event_start: startTime ? startTime.toISOString() : "",
-      event_end: endTime ? endTime.toISOString() : "",
-      image: file,
-    };
+    console.log(data);
+
+    const eventData = new FormData();
+    eventData.append("event_name", data.title);
+    eventData.append("event_description", data.description);
+    eventData.append("location", data.location);
+    eventData.append("groupId", data.group);
+    eventData.append("event_start", startTime ? startTime.toISOString() : "");
+    eventData.append("event_end", endTime ? endTime.toISOString() : "");
+    eventData.append("image", uploadedFile || "");
+
     try {
-      const response = await http.post("/events", eventData);
+      // const response = await http.post("/events", eventData);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/events`,
+        eventData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
 
       if (response.status === 201) {
         toast.success("Event created successfully", {
@@ -104,7 +121,6 @@ export default function CreateEvents(props: {
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const uploadedFile = event.target.files?.[0];
-    // console.log(e.target);
 
     if (uploadedFile) {
       const fileSize = uploadedFile.size / 1024 / 1024; //To convert to MB
@@ -114,7 +130,8 @@ export default function CreateEvents(props: {
       } else {
         setFile(URL.createObjectURL(uploadedFile));
         setImageName(uploadedFile.name);
-        console.log(URL.createObjectURL(uploadedFile));
+        setUploadedFile(uploadedFile);
+        // console.log(uploadedFile);
       }
     }
   };
