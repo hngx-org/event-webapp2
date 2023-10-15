@@ -38,7 +38,7 @@ export default function Auth() {
     try {
       // const callBackURL = "http://localhost:8080/api/auth/callback";
       const callBackURL =
-        "https://zuri-event-webapp2.vercel.app/api/auth/callback";
+        "https://wetindeysup-api.onrender.com/api/auth/callback";
       const response = await axios.get(
         `${callBackURL}?code=${authorizationCode}`,
       );
