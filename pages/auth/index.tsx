@@ -10,27 +10,23 @@ import { ClipLoader } from "react-spinners";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { LoadingSVG } from "@/components/layout/TimelineEvents";
+import { User } from "@/@types";
+import { useAuth } from "@/hooks/useAuth";
 
-type user = {
-  avatar: string;
-  email: string;
-  id: string;
-  token: string;
-  username: string;
-};
 type dataRes = {
-  data: user;
+  data: User;
   message: string;
   statusCode: number;
 };
 
 export default function Auth() {
+  const { token } = useAuth();
   const router = useRouter();
   const clientId =
     "69712066400-eu3ddnj8njs960htlnbh9hlgrvfg6ke9.apps.googleusercontent.com";
   const redirectUri = "https://zuri-event-webapp2.vercel.app/";
   const [isLoading, setIsLoading] = useState(false);
-
+  const [user, setUser] = useState<User | null>(null);
   const signInWithGoogle = () => {
     const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=email profile&access_type=offline`;
     window.location.href = authUrl;
@@ -54,6 +50,8 @@ export default function Auth() {
         setIsLoading(false);
         console.log("Server Response:", data);
         localStorage.setItem("token", data.data.token);
+        setUser(data.data);
+        localStorage.setItem("user", JSON.stringify(data.data));
       })
       .catch((error) => {
         setIsLoading(false);
@@ -78,6 +76,9 @@ export default function Auth() {
 
   if (isLoading) {
     return <LoadingSVG />;
+  }
+  if (token) {
+    router.push("/timeline");
   }
   return (
     <>

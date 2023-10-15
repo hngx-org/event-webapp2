@@ -1,11 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MainLayout from "@/components/layout/mainLayout";
 import MyCalendar from "@/components/layout/myCalendar";
 import Header from "@/components/header";
 import { useEventData } from "@/hooks/useEventData";
+import { useRouter } from "next/router";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Calendar() {
-  const { events, error, loading } = useEventData();
+  const { events } = useEventData();
+  const Router = useRouter();
+  const { token, loading } = useAuth();
+  // useEffect(() => {
+  //   if (!loading) {
+  //     if (!token) {
+  //       Router.push("/");
+  //     }
+  //   }
+  // }, [token, Router]);
   return (
     <MainLayout>
       <Header
