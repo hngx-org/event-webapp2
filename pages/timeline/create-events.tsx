@@ -46,7 +46,7 @@ export default function CreateEvents(props: {
   const [groups, setGroups] = useState<UserGroups[]>([]);
   const router = useRouter();
   const [file, setFile] = useState("");
-  const [uploadedFile, setUploadedFile] = useState("");
+  const [uploadedFile, setUploadedFile] = useState<any>("");
 
   const fetchGroups = async () => {
     const response = await http.get("/groups");
