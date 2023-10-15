@@ -21,7 +21,6 @@ type dataRes = {
 };
 
 export default function Auth() {
-  const { token } = useAuth();
   const router = useRouter();
   const clientId =
     "69712066400-eu3ddnj8njs960htlnbh9hlgrvfg6ke9.apps.googleusercontent.com";
@@ -79,9 +78,6 @@ export default function Auth() {
 
   if (isLoading) {
     return <LoadingSVG />;
-  }
-  if (token) {
-    router.push("/timeline");
   }
   return (
     <>
