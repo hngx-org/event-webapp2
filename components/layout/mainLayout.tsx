@@ -11,6 +11,7 @@ import Image from "next/image";
 import http from "@/http/interceptor";
 import { useRouter } from "next/navigation";
 // import { AuthProvider } from "@/provider/AuthProvider";
+import Cookies from "js-cookie";
 
 type Anchor = "left" | "top" | "bottom" | "right";
 
@@ -31,7 +32,7 @@ function MainLayout({ children, title }: MainLayoutProps) {
   }, []);
 
   function logout() {
-    localStorage.removeItem("token");
+    Cookies.remove("token");
     router.push("/");
   }
 

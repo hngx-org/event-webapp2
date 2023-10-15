@@ -24,6 +24,7 @@ import "react-toastify/dist/ReactToastify.css";
 import MainLayout from "@/components/layout/mainLayout";
 import http from "@/http/interceptor";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const today = dayjs().add(0, "day");
 
@@ -78,7 +79,7 @@ export default function CreateEvents(props: {
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${Cookies.get("token")}`,
           },
         },
       );

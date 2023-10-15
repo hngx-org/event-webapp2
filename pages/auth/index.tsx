@@ -50,14 +50,13 @@ export default function Auth() {
         // Save token and user info
         Cookies.set("token", response.data.token);
         Cookies.set("user", JSON.stringify(response.data.user));
-        console.log("push:", response.data);
         router.push("/timeline");
       }
     } catch (error: any) {
       setIsLoading(false);
       console.error(error);
       // router.push("/");
-      toast.error(error || "Login failed! Try again");
+      toast.error("Something went wrong");
     }
   };
 
