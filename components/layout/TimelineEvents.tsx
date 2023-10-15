@@ -3,6 +3,7 @@ import caret from "../../public/arrow-down.svg";
 import Image from "next/image";
 import { TimelineCardProps } from "@/@types/index";
 import TimeLineEventCard from "../TimeLineEventCard";
+import http from "@/http/interceptor";
 
 export const ArrowDownSVG: React.FC = () => (
   <svg
@@ -122,20 +123,20 @@ const dropdownItems: dropdownProps[] = [
   },
 
   {
-    text: "Last Week",
+    text: "This Week",
     value: "last-week",
   },
   {
-    text: "Last Month",
+    text: "This Month",
     value: "last-month",
   },
 ];
 
 const TimelineEvents = () => {
-  const [eventData, setEventData] = useState<TimelineCardProps[]>([])
-  const [filteredEvent, setFilteredEvent] = useState<TimelineCardProps[]>([])
+  const [eventData, setEventData] = useState<TimelineCardProps[]>([]);
+  const [filteredEvent, setFilteredEvent] = useState<TimelineCardProps[]>([]);
 
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedItem, setSelectedItem] = useState<dropdownProps>(
     dropdownItems[0],
   );
@@ -146,46 +147,58 @@ const TimelineEvents = () => {
   const filterEvents = (filterKeyword: string) => {
     const currentDate = new Date();
     switch (filterKeyword) {
-      case 'this-week':
+      case "this-week":
         const thisWeek = currentDate.getDate() - currentDate.getDay();
-        const filteredThisWeek: any = eventData.length > 0 && eventData.filter(event => {
-          const eventDate = new Date(event.end_date);
-          return eventDate.getDate() >= thisWeek && eventDate.getMonth() === currentDate.getMonth();
-        });
-        console.log("This Week", filteredThisWeek)
+        const filteredThisWeek: any =
+          eventData.length > 0 &&
+          eventData.filter((event) => {
+            const eventDate = new Date(event.event_end);
+            return (
+              eventDate.getDate() >= thisWeek &&
+              eventDate.getMonth() === currentDate.getMonth()
+            );
+          });
+        console.log("This Week", filteredThisWeek);
         setFilteredEvent(filteredThisWeek);
         break;
-      case 'last-week':
+      case "last-week":
         const lastWeek = currentDate.getDate() - currentDate.getDay();
-        const filteredLastWeek: any = eventData.length > 0 && eventData.filter(event => {
-          const eventDate = new Date(event.end_date);
-          return eventDate.getDate() < lastWeek && eventDate.getDate() < currentDate.getDate();
-        });
-        console.log("Last Week", filteredLastWeek)
+        const filteredLastWeek: any =
+          eventData.length > 0 &&
+          eventData.filter((event) => {
+            const eventDate = new Date(event.event_end);
+            return (
+              eventDate.getDate() < lastWeek &&
+              eventDate.getDate() < currentDate.getDate()
+            );
+          });
+        console.log("Last Week", filteredLastWeek);
         setFilteredEvent(filteredLastWeek);
         break;
-      case 'last-month':
+      case "last-month":
         const lastMonth = currentDate.getMonth() - 1;
-        const filteredLastMonth: any = eventData.length > 0 && eventData.filter(event => {
-          const eventDate = new Date(event.end_date);
-          return eventDate.getMonth() === lastMonth;
-        });
-        console.log("Last months", filteredLastMonth)
+        const filteredLastMonth: any =
+          eventData.length > 0 &&
+          eventData.filter((event) => {
+            const eventDate = new Date(event.event_end);
+            return eventDate.getMonth() === lastMonth;
+          });
+        console.log("Last months", filteredLastMonth);
         setFilteredEvent(filteredLastMonth);
         break;
-      case 'all':
-        console.log("All", eventData)
+      case "all":
+        console.log("All", eventData);
         setFilteredEvent(eventData);
         break;
       default:
-        console.log("Default", eventData)
+        console.log("Default", eventData);
         setFilteredEvent(eventData);
     }
   };
 
   const handleItemClick = (item: dropdownProps) => {
     setSelectedItem(item);
-    filterEvents(item.value)
+    filterEvents(item.value);
     setIsOpen(false);
   };
 
@@ -215,23 +228,21 @@ const TimelineEvents = () => {
   //   }
   // };
 
-  const fetchData = (endpoint: string) => {
-    setIsLoading(true)
-    setSelectedItem(dropdownItems[0])
-    setEventData([])
-    fetch(`https://events-be-python-psi.vercel.app/api/${endpoint}`)
-      .then(response => response.json())
-      .then((response) => {
-        // console.log(response)
-        setEventData(response)
-        setFilteredEvent(response)
-        setIsLoading(false)
-      })
-      .catch(err => {
-        console.log('Fetch Error', err)
-        setIsLoading(false)
-      })
-  }
+  const fetchData = async (endpoint: string) => {
+    setIsLoading(true);
+    setSelectedItem(dropdownItems[0]);
+    setEventData([]);
+    try {
+      const response = await http.get(endpoint);
+      if (response) {
+        setEventData(response.data);
+        setFilteredEvent(response.data);
+        setIsLoading(false);
+      }
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {
@@ -240,7 +251,7 @@ const TimelineEvents = () => {
       }
     };
 
-    fetchData('friends_events')
+    fetchData("/events/friends");
 
     document.addEventListener("click", handleClickOutside);
 
@@ -249,39 +260,33 @@ const TimelineEvents = () => {
     };
   }, []);
 
-  const renderCardData = filteredEvent.length > 0 ? filteredEvent.map((item) => (
-    <TimeLineEventCard key={item.id} {...(item as TimelineCardProps)} />
-  )) : <p className="mt-[-30px] ps-2 md:ps-4 text-xl text-[#84838B]">
-    No Event found for <span className="font-semibold capitalize text-[#3F3849]">{active}</span>
-  </p>
-
   return (
     <div className="mx-auto mt-8 p-2 sm:p-6 bg-[#F0F0F0] rounded-2xl">
       <div className="flex flex-col sm:flex-row justify-between w-full relative">
         <div className="flex p-2 md:p-4 justify-start md:justify-center mb-3 md:mb-0 items-center gap-5 sm:gap-10 ">
           <button
-
-            className={`transform transition-all ease-in-out duration-200 text-xl ${active === "friends"
-              ? "border-b-2 border-[#3F3849] font-bold text-[#3F3849]"
-              : "text-[#84838B] font-medium"
-              }`}
+            className={`transform transition-all ease-in-out duration-200 ${
+              active === "friends"
+                ? "border-b-2 border-[#3F3849] font-bold text-[#3F3849]"
+                : "text-[#84838B] font-medium"
+            }`}
             onClick={() => {
-              setActive("friends")
-              fetchData('friends_events')
+              setActive("friends");
+              fetchData("/events/friends");
             }}
           >
             Friends
           </button>
           <button
-            className={`transform transition-all ease-in-out duration-200 text-xl ${active === "everyone"
-              ? "border-b-2 border-[#3F3849] font-bold text-[#3F3849]"
-              : "text-[#84838B] font-medium"
-              }`}
+            className={`transform transition-all ease-in-out duration-200 ${
+              active === "everyone"
+                ? "border-b-2 border-[#3F3849] font-bold text-[#3F3849]"
+                : "text-[#84838B] font-medium"
+            }`}
             onClick={() => {
-              setActive("everyone")
-              fetchData('events/all')
+              setActive("everyone");
+              fetchData("/events");
             }}
-
           >
             Everyone
           </button>
@@ -296,18 +301,20 @@ const TimelineEvents = () => {
           </button>
 
           <div
-            className={`absolute overflow-hidden mt-2 w-36 bg-white  rounded-md shadow-lg z-10 transition duration-200 ease-linear ${isOpen ? "translate-y-0" : "-translate-y-3"
-              }`}
+            className={`absolute overflow-hidden mt-2 w-36 bg-white  rounded-md shadow-lg z-10 transition duration-200 ease-linear ${
+              isOpen ? "translate-y-0" : "-translate-y-3"
+            }`}
           >
             {isOpen ? (
               <>
                 {dropdownItems.map((item) => (
                   <button
                     key={item.value}
-                    className={`block px-4 py-2 text-gray w-full ${selectedItem.value === item.value
-                      ? "bg-[#3F3849] hover:bg-[#3F3849] text-white"
-                      : "hover:bg-slate-100"
-                      }`}
+                    className={`block px-4 py-2 text-gray text-left w-full ${
+                      selectedItem.value === item.value
+                        ? "bg-[#3F3849] hover:bg-[#3F3849] text-white"
+                        : "hover:bg-slate-100"
+                    }`}
                     onClick={(e) => handleItemClick(item)}
                   >
                     {item.text}
@@ -318,11 +325,31 @@ const TimelineEvents = () => {
           </div>
         </div>
       </div>
-      {isLoading && <div className="pt-4"><LoadingSVG /></div>}
-      {/* Pictures Grid Container */}
-      <div className="mt-9 grid md:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-8 ">
-        {eventData && renderCardData}
-      </div>
+      {isLoading ? (
+        <div className="p-10 bg-primary/10">
+          <LoadingSVG />
+        </div>
+      ) : (
+        <div className="mt-9 ">
+          {filteredEvent.length > 0 ? (
+            <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-8 ">
+              {filteredEvent.map((item) => (
+                <TimeLineEventCard
+                  key={item.id}
+                  {...(item as TimelineCardProps)}
+                />
+              ))}
+            </div>
+          ) : (
+            <p className="mt-[-30px] p-6 text-center text-[#84838B]">
+              No Event found for{" "}
+              <span className="font-semibold capitalize text-[#3F3849]">
+                {active}
+              </span>
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 };

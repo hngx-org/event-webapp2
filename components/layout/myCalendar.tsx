@@ -16,11 +16,11 @@ const MyCalendar = () => {
         defaultDate={moment().toDate()}
         localizer={localizer}
         events={eventsData}
-        startAccessor="start_date"
-        endAccessor="end_date"
-        titleAccessor="title"
+        startAccessor="event_start"
+        endAccessor="event_end"
+        titleAccessor="event_name"
         style={{ height: "80vh" }}
-        tooltipAccessor="description"
+        tooltipAccessor="event_description"
         views={["month"]}
       />
     </div>

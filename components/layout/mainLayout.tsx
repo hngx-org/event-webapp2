@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MainLayoutProps } from "../../@types";
 import Drawer from "@mui/material/Drawer";
 import Button from "@mui/material/Button";
@@ -8,11 +8,14 @@ import Logo from "assets/wetindeysup.png";
 import NavLinks from "./navLinks";
 import { LogoutIcon } from "@/public/assets/icon/sideBarIcons";
 import Image from "next/image";
+import http from "@/http/interceptor";
+import { useRouter } from "next/navigation";
 // import { AuthProvider } from "@/provider/AuthProvider";
 
 type Anchor = "left" | "top" | "bottom" | "right";
 
 function MainLayout({ children, title }: MainLayoutProps) {
+  const router = useRouter();
   const [state, setState] = useState({
     left: false,
   });
@@ -20,6 +23,18 @@ function MainLayout({ children, title }: MainLayoutProps) {
   const toggleDrawer = (anchor: Anchor, open: boolean) => () => {
     setState({ ...state, [anchor]: open });
   };
+  useEffect(() => {
+    // const token = localStorage.getItem("token") || "";
+    const token = localStorage.getItem("token");
+    http.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    if (!token) {
+      router.push("/");
+    }
+  }, []);
+  function logout() {
+    localStorage.removeItem("token");
+    router.push("/");
+  }
 
   return (
     <div>
@@ -58,7 +73,10 @@ function MainLayout({ children, title }: MainLayoutProps) {
               <NavLinks />
             </div>
 
-            <button className="flex gap-3 items-center text-white/50 font-medium px-12">
+            <button
+              className="flex gap-3 items-center text-white/50 font-medium px-12"
+              onClick={logout}
+            >
               <LogoutIcon />
               <span>Log Out</span>
             </button>

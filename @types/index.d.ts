@@ -64,31 +64,43 @@ export interface UserProfs {
   name: string;
   profilePhoto: string;
 }
+// export interface EventData {
+//   id: string;
+//   creator: string;
+//   title: string;
+//   description: string;
+//   location: string;
+//   start_date: Date;
+//   group: string;
+//   end_date: Date;
+//   start_time: string;
+//   end_time: string;
+//   image: string;
+// }
 export interface EventData {
   id: string;
-  creator: string;
-  title: string;
-  description: string;
-  location: string;
-  start_date: Date;
-  group: string;
-  end_date: Date;
-  start_time: string;
-  end_time: string;
+  event_name: string;
+  event_description: string;
   image: string;
+  event_start: Date;
+  event_end: Date;
+  location: string;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
 }
+
 export interface TimelineCardProps {
-  creator: string,
-  description: string,
-  end_date: string,
-  end_time: string,
-  group: number,
-  id: string,
-  image: string,
-  location: string,
-  start_date: string,
-  start_time: string,
-  title: string,
+  created_at: string;
+  created_by: string;
+  event_description: string;
+  event_end: string;
+  event_name: string;
+  event_start: string;
+  id: string;
+  image: string;
+  location: string;
+  updated_at: string;
 }
 
 export interface cardItem {
@@ -99,7 +111,7 @@ export interface cardItem {
 }
 
 export interface MyPeopleProps {
-  id: number,
+  id: number;
   bgColor: string;
   imgSrc: any;
   name: string;
@@ -112,13 +124,13 @@ type AuthContextType = {
 };
 
 export interface Group {
-  pk: number,
-  admin: string,
-  created_at: string,
-  updated_at: string,
-  image: string,
-  group_name: string,
-  friends: number[]
+  id: number;
+  admin: string;
+  created_at: string;
+  updated_at: string;
+  image: string;
+  group_name: string;
+  friends: number[];
 }
 
 export type FormValues = {
@@ -131,4 +143,20 @@ export type FormValues = {
   start_time: string;
   end_time: string;
   image: string | null;
+};
+
+export interface UserGroups {
+  created_at: string;
+  created_by: string;
+  group_name: string;
+  id: string;
+  updated_at: string;
 }
+
+export interface User {
+  avatar: string;
+  email: string;
+  id: string;
+  token: string;
+  username: string;
+};

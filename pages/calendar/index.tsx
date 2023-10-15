@@ -1,15 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MainLayout from "@/components/layout/mainLayout";
 import MyCalendar from "@/components/layout/myCalendar";
 import Header from "@/components/header";
 import { useEventData } from "@/hooks/useEventData";
+import { useRouter } from "next/router";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Calendar() {
-  const { events, error, loading } = useEventData();
-  const [searchQuery, setSearchQuery] = useState("");
-  const handleSearchInputChange = (data: any) => {
-    setSearchQuery(data.target.value);
-  };
+  const { events } = useEventData();
+  const Router = useRouter();
+  const { token, loading } = useAuth();
+  // useEffect(() => {
+  //   if (!loading) {
+  //     if (!token) {
+  //       Router.push("/");
+  //     }
+  //   }
+  // }, [token, Router]);
   return (
     <MainLayout>
       <Header
@@ -23,12 +30,12 @@ export default function Calendar() {
             <div className="p-[10px]">
               <div className="flex justify-between items-center flex-wrap">
                 <h3 className="text-[#33313E] text-lg font-bold">
-                  {event?.title}
+                  {event?.event_name}
                 </h3>
-                <p className="text-xs"> {event?.start_date.toDateString()} </p>
+                <p className="text-xs"> {event?.event_start.toDateString()} </p>
               </div>
               <p className="text-[#333333] text-base font-medium capitalize">
-                {event?.description}
+                {event?.event_description}
               </p>
             </div>
           </div>

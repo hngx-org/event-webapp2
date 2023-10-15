@@ -1,11 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 
 const SettingsLayout = ({ children }: { children: React.ReactNode }) => {
   const isActive = true;
-  const router = useRouter();
-  const currentRoute = router.pathname;
+  const pathname = usePathname();
 
   return (
     <div className="w-full py-4 md:flex gap-8 ">
@@ -28,7 +27,7 @@ const SettingsLayout = ({ children }: { children: React.ReactNode }) => {
           <Link
             href="/settings"
             className={`p-3.5 flex justify-between items-center bg-[#FFC6BC] text-[#33313E] ${
-              currentRoute === "/settings" && "font-bold"
+              pathname.startsWith("/settings") && "font-bold"
             }`}
           >
             <div className=" flex items-center gap-2.5">
@@ -96,7 +95,7 @@ const SettingsLayout = ({ children }: { children: React.ReactNode }) => {
           <Link
             href="/settings/privacy"
             className={`p-3.5 flex justify-between items-center bg-[#D2F5FE] text-[#33313E] ${
-              currentRoute === "/settings/privacy" && "font-bold"
+              pathname.startsWith("/settings/privacy") && "font-bold"
             }`}
           >
             <div className=" flex items-center gap-2.5">
@@ -163,7 +162,7 @@ const SettingsLayout = ({ children }: { children: React.ReactNode }) => {
           <Link
             href="/settings/appearance"
             className={`p-3.5 flex justify-between items-center bg-[#FFE0C4] text-[#33313E] ${
-              currentRoute === "/settings/appearance" && "font-bold"
+              pathname.startsWith("/settings/appearance") && "font-bold"
             }`}
           >
             <div className=" flex items-center gap-2.5">
@@ -230,7 +229,7 @@ const SettingsLayout = ({ children }: { children: React.ReactNode }) => {
           <Link
             href="/settings/language"
             className={`p-3.5 flex justify-between items-center bg-[#FFC6BC] text-[#33313E] ${
-              currentRoute === "/settings/language" && "font-bold"
+              pathname.startsWith("/settings/language") && "font-bold"
             }`}
           >
             <div className=" flex items-center gap-2.5">
@@ -299,7 +298,7 @@ const SettingsLayout = ({ children }: { children: React.ReactNode }) => {
           <Link
             href="/settings/help"
             className={`p-3.5 flex justify-between items-center bg-[#D2F5FE] text-[#33313E] ${
-              currentRoute === "/settings/help" && "font-bold"
+              pathname.startsWith("/settings/help") && "font-bold"
             }`}
           >
             <div className=" flex items-center gap-2.5">
@@ -367,7 +366,7 @@ const SettingsLayout = ({ children }: { children: React.ReactNode }) => {
           <Link
             href="/settings/about"
             className={`p-3.5 flex justify-between items-center bg-[#FFE0C4] ${
-              currentRoute === "/settings/about" && "font-bold"
+              pathname.startsWith("/settings/about") && "font-bold"
             }`}
           >
             <div className=" flex items-center gap-2.5">

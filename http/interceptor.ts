@@ -8,7 +8,16 @@ const http = axios.create({
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
+    // Authorization: `Bearer ${token}`,
   },
+});
+
+// Interceptor to stringify request data
+http.interceptors.request.use(function (config) {
+  if (config.data) {
+    config.data = JSON.stringify(config.data);
+  }
+  return config;
 });
 
 export default http;
