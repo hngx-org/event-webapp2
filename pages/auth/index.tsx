@@ -58,14 +58,20 @@ export default function Auth() {
         console.error("Fetch Error:", error);
       });
   };
-  useEffect(() => {
+
+  const authorizeUser = async () => {
     const queryParams = new URLSearchParams(window.location.search);
     const authorizationCode = queryParams.get("code");
     if (authorizationCode) {
       console.log("Authorization Code:", authorizationCode);
-      fetchData(authorizationCode);
-      router.push("/timeline");
+      const data = await fetchData(authorizationCode);
+      if (data) {
+        router.push("/timeline");
+      }
     }
+  };
+  useEffect(() => {
+    authorizeUser();
   }, []);
 
   const signInWithTwitter = () => {
