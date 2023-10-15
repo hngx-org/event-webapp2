@@ -71,8 +71,8 @@ export default function Auth() {
       //   }
     }
   };
-  const token = localStorage.getItem("token");
   useEffect(() => {
+    const token = localStorage.getItem("token");
     if (token) {
       router.push("/timeline");
     }
