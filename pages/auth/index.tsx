@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { LoadingSVG } from "@/components/layout/TimelineEvents";
 import { User } from "@/@types";
 import { useAuth } from "@/hooks/useAuth";
+import axios from "axios";
 
 type dataRes = {
   data: User;
@@ -31,32 +32,28 @@ export default function Auth() {
     const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=email profile&access_type=offline`;
     window.location.href = authUrl;
   };
-  const fetchData = (authorizationCode: string) => {
+
+  const fetchData = async (authorizationCode: string) => {
     setIsLoading(true);
-    fetch("https://wetindeysup-api.onrender.com/api/auth/callback", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ code: authorizationCode }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data: dataRes) => {
+    try {
+      const response = await axios.post(
+        "https://wetindeysup-api.onrender.com/api/auth/callback",
+        JSON.stringify({ code: authorizationCode }),
+      );
+      console.log(response);
+
+      if (response) {
         setIsLoading(false);
-        console.log("Server Response:", data);
-        localStorage.setItem("token", data.data.token);
-        setUser(data.data);
-        localStorage.setItem("user", JSON.stringify(data.data));
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        console.error("Fetch Error:", error);
-      });
+        console.log("Server Response:", response);
+        localStorage.setItem("token", response.data.token);
+        setUser(response.data);
+        localStorage.setItem("user", JSON.stringify(response.data));
+        return response.data;
+      }
+    } catch (error: any) {
+      setIsLoading(false);
+      console.error(error);
+    }
   };
 
   const authorizeUser = async () => {
