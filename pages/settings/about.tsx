@@ -54,18 +54,30 @@ export default function About() {
                 </h3>
                 <p className="mt-4 text-black/70">
                   Welcome to WetinDeySup, your go-to platform for organizing and
-                  discovering exciting events. We&apos;re dedicated to making
-                  event planning and attendance a breeze. Whether you&apos;re
-                  hosting a gathering or seeking the latest happenings in your
-                  area, our user-friendly app has you covered. We&apos;re on a
-                  mission to connect people, foster communities, and bring
-                  unforgettable moments to life. At WetinDeySup, we believe that
-                  every event, big or small, has the potential to create
-                  memories that last a lifetime. Our team is committed to
-                  delivering the best event experience, providing you with the
-                  tools and resources you need to make your events a success.
-                  So, go ahead and explore, create, and engage with events that
-                  matter to you.
+                  discovering exciting events. We're dedicated to making event
+                  planning and attendance a breeze.
+                </p>
+                <p className="mt-4 text-black/70">
+                  Whether you're hosting a gathering or seeking the latest
+                  happenings in your area, our user-friendly app has you
+                  covered.
+                </p>
+                <p className="mt-4 text-black/70">
+                  We're on a mission to connect people, foster communities, and
+                  bring unforgettable moments to life. At WetinDeySup, we
+                  believe that every event, big or small, has the potential to
+                  create memories that last a lifetime.
+                </p>
+                <p className="mt-4 text-black/70">
+                  Our team is committed to delivering the best event experience,
+                  providing you with the tools and resources you need to make
+                  your events a success. So, go ahead and explore, create, and
+                  engage with events that matter to you.
+                </p>
+                <p className="mt-4 text-black font-bold">
+                  Thank you for being a part of the WetinDeySup community. We
+                  can't wait to help you discover, create, and share your next
+                  event!
                 </p>
               </div>
             </div>
