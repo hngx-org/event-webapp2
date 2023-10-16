@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { LoadingSVG } from "@/components/layout/TimelineEvents";
 import { User } from "@/@types";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 type dataRes = {
   data: User;
@@ -23,7 +24,7 @@ export default function Auth() {
   const router = useRouter();
   const clientId =
     "69712066400-eu3ddnj8njs960htlnbh9hlgrvfg6ke9.apps.googleusercontent.com";
-  // const redirectUri = "http://localhost:3000";
+  //   const redirectUri = "http://localhost:3000";
   const redirectUri = "https://zuri-event-webapp2.vercel.app";
   const [isLoading, setIsLoading] = useState(false);
 
@@ -48,21 +49,20 @@ export default function Auth() {
       if (response) {
         setIsLoading(false);
         // Save token and user info
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-        console.log("push:", response.data);
+        Cookies.set("token", response.data.token);
+        Cookies.set("user", JSON.stringify(response.data.user));
         router.push("/timeline");
       }
     } catch (error: any) {
       setIsLoading(false);
       console.error(error);
-      router.push("/");
-      toast.error(error || "Login failed! Try again");
+      // router.push("/");
+      toast.error("Something went wrong");
     }
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (token) {
       router.push("/timeline");
     } else {
@@ -74,6 +74,7 @@ export default function Auth() {
       const queryParams = new URLSearchParams(window.location.search);
       const authorizationCode = queryParams.get("code");
       if (authorizationCode) {
+        Cookies.set("authorizationCode", authorizationCode);
         authorizeUser(authorizationCode);
       }
     }

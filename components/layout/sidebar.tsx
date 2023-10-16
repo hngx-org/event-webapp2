@@ -6,13 +6,13 @@ import Logo from "assets/wetindeysup.png";
 import Link from "next/link";
 // import { auth } from "@/config/firebase";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 export default function Sidebar() {
   const router = useRouter();
 
   function handleLogout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    Cookies.remove("token");
     router.push("/");
   }
 
@@ -34,15 +34,13 @@ export default function Sidebar() {
         <NavLinks />
       </div>
 
-      <Link href="/">
-        <button
-          className="flex gap-3 items-center text-white/50 font-medium px-12"
-          onClick={handleLogout}
-        >
-          <LogoutIcon />
-          <span>Log Out</span>
-        </button>
-      </Link>
+      <button
+        className="flex gap-3 items-center text-white/50 font-medium px-12"
+        onClick={handleLogout}
+      >
+        <LogoutIcon />
+        <span>Log Out</span>
+      </button>
     </aside>
   );
 }

@@ -1,6 +1,8 @@
 "use client";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import http from "@/http/interceptor";
 import "react-toastify/dist/ReactToastify.css";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -15,7 +17,6 @@ import {
 } from "@/public/assets/icon/peopleIcon";
 import Image from "next/image";
 import Avatar from "assets/images/avatar.png";
-import axios from "axios";
 
 const initialValues = {
   firstName: "",
@@ -28,7 +29,7 @@ const override: CSSProperties = {
 const validationSchema = yup.object().shape({
   firstName: yup.string().required("Required"),
   //   lastName: yup.string().required("Required"),
-  //   email: yup.string().required("Required"),
+  email: yup.string().email("Invalid email").required("Required"),
   //   roles: yup
   //     .array()
   //     .of(yup.string().required("At least one role is required"))
@@ -47,10 +48,10 @@ export default function CreateNewGroup() {
   const [errMsg, setErrMsg] = useState("");
   //const [addedFriends, setAddedFriends] = useState("");
   const [groupName, setGroupName] = useState("");
-  const [friendEmail, setFriendEmail] = useState("");
+  const [friendEmail, setFriendEmail] = useState<string>("");
+  const [friendEmails, setFriendEmails] = useState<string[]>([]);
   const [isCreatingGroup, setIsCreatingGroup] = useState(false);
-  const [isAddingFriend, setIsAddingFriend] = useState(false);
-  const [uploadedFile, setUploadedFile] = useState<any>("");
+  // const [isAddingFriend, setIsAddingFriend] = useState(false);
 
   function uploadImage(e: any) {
     const uploadedFile = e.target.files[0];
@@ -62,7 +63,6 @@ export default function CreateNewGroup() {
         setErrMsg("File size must be less than 1MB.");
         e.target.value = null;
       } else {
-        setUploadedFile(uploadedFile);
         setFile(URL.createObjectURL(uploadedFile));
         setErrMsg("");
       }
@@ -75,6 +75,10 @@ export default function CreateNewGroup() {
 
   function closeModal() {
     setIsOpen(false);
+    setGroupName("");
+    setFile("");
+    setFriendEmail("");
+    setFriendEmails([]);
   }
 
   function openModal() {
@@ -85,57 +89,37 @@ export default function CreateNewGroup() {
     1;
   };
 
+  // function to create a new group
   const createNewGroup = async () => {
     try {
       setIsCreatingGroup(true);
-
-      const formData = new FormData();
-      formData.append("group_name", groupName);
-      uploadedFile ? formData.append("image", uploadedFile || "") : null;
-      formData.append("emails", JSON.stringify([friendEmail]));
-
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/groups`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        },
-      );
+      const response = await http.post("/groups", {
+        group_name: groupName,
+        emails: friendEmails,
+      });
 
       if (response.status === 201) {
         setSuccessMsg("Group created successfully!");
         setGroupName("");
-        setFriendEmail("");
-        closeModal();
+        setFriendEmails([]);
       }
-    } catch (error: any) {
+    } catch (error) {
       setErrMsg("Error creating group. Please try again.");
       console.error(error);
     } finally {
-      // setIsCreatingGroup(false);
-      // closeModal();
+      setIsCreatingGroup(false);
+      closeModal();
     }
   };
 
-  const addFriendToGroup = async (groupId: any) => {
-    // try {
-    //   setIsAddingFriend(true);
-    //   const response = await http.post(`/groups/${groupId}/addUser`, {
-    //     email: friendEmail,
-    //   });
-    //   if (response.status === 201) {
-    //     setSuccessMsg("Friend added successfully!");
-    //     setFriendEmail("");
-    //   }
-    // } catch (error) {
-    //   // setErrMsg('Please fill all data');
-    //   console.error(error);
-    // } finally {
-    //   setIsAddingFriend(false);
-    // }
+  // function to add friend emails to an array
+  const addFriendToGroup = () => {
+    if (friendEmail) {
+      setFriendEmails((prevEmails) => [...prevEmails, friendEmail]);
+      setSuccessMsg("Friend added successfully!");
+      setFriendEmail("");
+      console.log(friendEmails);
+    }
   };
 
   return (
@@ -283,7 +267,7 @@ export default function CreateNewGroup() {
                                 </label>
                                 <div className="flex relative">
                                   <Field
-                                    type="email"
+                                    type="text"
                                     id="friend"
                                     name="friend"
                                     autoComplete="off"
@@ -328,9 +312,9 @@ export default function CreateNewGroup() {
                                       />
                                     </div>
                                     <div className="">
-                                      <p className="font-semibold">Yusuf D.</p>
+                                      <p className="font-semibold">Salome</p>
                                       <p className="text-brand-gray-400">
-                                        dycodes51@gmail.com
+                                        salome357@gmail.com
                                       </p>
                                     </div>
                                   </div>
