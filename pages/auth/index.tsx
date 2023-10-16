@@ -56,7 +56,7 @@ export default function Auth() {
     } catch (error: any) {
       setIsLoading(false);
       console.error(error);
-      // router.push("/");
+      router.push("/");
       toast.error("Something went wrong");
     }
   };
@@ -66,15 +66,12 @@ export default function Auth() {
     if (token) {
       router.push("/timeline");
     } else {
-      // Create a testToken in localStorage for local development
-      localStorage.setItem(
-        "test_token",
-        "Rename to token & paste the real token here.",
-      );
+      // Create a testToken to Cookies for local development
+      Cookies.set("test_token", "Rename to token & paste the real token here.");
+
       const queryParams = new URLSearchParams(window.location.search);
       const authorizationCode = queryParams.get("code");
       if (authorizationCode) {
-        Cookies.set("authorizationCode", authorizationCode);
         authorizeUser(authorizationCode);
       }
     }
