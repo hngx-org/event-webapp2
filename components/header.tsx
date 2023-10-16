@@ -1,5 +1,6 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Avatar from "assets/images/avatar.png";
+import Vector from "public/Vector.png"
 import { SearchIcon } from "@/public/assets/icon/searchIcon";
 import Image from "next/image";
 import SearchBar from "@/components/searchBar";
@@ -8,11 +9,22 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { AuthContext } from "@/provider/AuthProvider";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
+import SettingNotifications from "@/components/settingNotifications";
 
 export default function Header({ title, info }: HeaderProps) {
   const Router = useRouter();
   const { token, user } = useAuth();
-  return (
+  const [isNotificationVisible, setIsNotificationVisible] = useState(false);
+  const [isBellIconVisible, setBellIconVisible] = useState(true)
+  const toggleNotificationBar = () => {
+    setIsNotificationVisible(!isNotificationVisible);
+    setBellIconVisible(!isBellIconVisible);
+  };
+ const closeNotificationBar =() => {
+  setIsNotificationVisible(false);
+  setBellIconVisible(true);
+ }
+   return (
     <header className="w-full flex justify-between h-max sticky top-0 bg-brand-gray-100 z-20 p-4 lg:py-10 lg:px-0 gap-4">
       {/* Title section */}
       <div className="hidden lg:block">
@@ -39,6 +51,15 @@ export default function Header({ title, info }: HeaderProps) {
 
       <div className="flex gap-2 items-center">
         <div className="w-12 h-12 rounded-full overflow-hidden">
+          {isBellIconVisible &&   <Image
+            src={Vector}
+            alt="notification"
+            width={200}
+            height={200}
+            className="w-full h-full object-cover"
+            onClick={toggleNotificationBar}
+          />}
+      
           <Image
             src={user?.avatar as string}
             alt="logo"
@@ -51,6 +72,13 @@ export default function Header({ title, info }: HeaderProps) {
           {user?.username}
         </p>
       </div>
+      {/* Notification Bar */}
+      {isNotificationVisible && (
+        <div>
+        <SettingNotifications onClose={closeNotificationBar} /> 
+        </div>
+       
+      )}
     </header>
   );
 }
