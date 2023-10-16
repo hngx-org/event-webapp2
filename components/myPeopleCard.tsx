@@ -14,7 +14,7 @@ const MyPeopleCard = ({ bgColor, imgSrc, name, events, id }: MyPeopleProps) => {
     >
       {/* Conditionally render the image if the value from api call is null or not */}
       {imgSrc ? (
-          <Image src={imgSrc} width={273} height={173} className="w-full order-last md:order-first" alt="" />
+          <Image src={imgSrc} className="w-full h-[173px] order-last md:order-first" alt="" />
         ) : (
           <Image src={TechiesImage} width={273} height={173} className="w-full order-last md:order-first" alt="" />
         )}
