@@ -7,6 +7,8 @@ import PitchImage from "assets/techiesgroup/pitch.png";
 import PeopleImage from "assets/techiesgroup/people.png";
 import { CommentIcon } from "@/public/assets/icon/commentIcon";
 import { EventCardProps } from "@/@types";
+import moment from "moment";
+import Link from "next/link";
 
 export default function EventCard({
   bgColor,
@@ -15,7 +17,7 @@ export default function EventCard({
   comments,
   event,
 }: EventCardProps) {
-  console.log(event)
+  console.log(event);
   const date = new Date(event.event_start);
   const formattedDate = convertDateFormat(event.event_start);
   const weekDay = date.toLocaleDateString("en-US", { weekday: "long" });
@@ -51,7 +53,10 @@ export default function EventCard({
         <div className="flex items-center md:items-start md:flex-col gap-2 md:gap-3">
           <div className="w-[70px] h-[70px] md:w-full md:h-[140px] relative z-10 bg-neutral-400 rounded-full md:rounded-2xl">
             <Image
-              src={event.image || 'https://res.cloudinary.com/dssemh4yp/image/upload/v1697385858/chpx38k9tqvhcqcdkazv.png'}
+              src={
+                event.image ||
+                "https://res.cloudinary.com/dssemh4yp/image/upload/v1697385858/chpx38k9tqvhcqcdkazv.png"
+              }
               alt="Football Pitch"
               width={270}
               height={160}
@@ -65,17 +70,21 @@ export default function EventCard({
               </div>
               <div className="font-medium">{formattedDate}</div>
               <div className="font-medium text-xs md:text-base md:opacity-70">
-                {`${weekDay}, ${startTime}-${endTime}`}
+                {weekDay}, {moment(startTime).format("hh:mm")} -{" "}
+                {moment(endTime).format("hh:mm")}
               </div>
               <div className="font-medium md:font-normal md:opacity-80 text-[15px] md:text-base">
                 {event.location || "Unknown"}
               </div>
             </div>
-            <div className="flex items-end md:items-center">
+            <Link
+              href={`/groups/comments?id=${event.id}`}
+              className="flex items-end md:items-center"
+            >
               <button className="relative z-10 hover:scale-90 transition-all duration-200">
                 <ArrowButtonIcon />
               </button>
-            </div>
+            </Link>
             <div className="absolute bottom-2 -right-3 md:bottom- md:-right-6 md:-top-16">
               <Image
                 src={rectangles}
@@ -88,20 +97,8 @@ export default function EventCard({
           </div>
         </div>
       </div>
-      <div
-        className={`${bgColor} max-md:text-center ${
-          btnColor || "max-md:bg-white"
-        } px-4 py-2 md:pb-6 border border-black md:border-none md:pt-0`}
-      >
-        <a
-          href="#"
-          className="underline text-primary font-bold text-lg font-monserrat"
-        >
-          I will join
-        </a>
-      </div>
-      <a
-        href="#"
+      <Link
+        href={`/groups/comments?id=${event.id}`}
         className="rounded-b-2xl bg-primary py-3 px-6 text-white text-base md:text-sm flex items-center justify-between hover:bg-primary/80 transition-colors ease-in-out duration-150  border border-black md:border-none border-t-0 md:pl-4"
       >
         {!comments ? (
@@ -136,7 +133,7 @@ export default function EventCard({
           <span>11 Comments</span>
         </div>
         <RightArrowIcon />
-      </a>
+      </Link>
     </div>
   );
 }

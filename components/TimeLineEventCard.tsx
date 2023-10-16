@@ -5,6 +5,7 @@ import Rectangle31 from "../public/Rectangle31.png";
 import Rectangle32 from "../public/Rectangle32.png";
 import { GroupRectangleSVG, NextBtnSVG } from "./layout/TimelineEvents";
 import moment from "moment";
+import Link from "next/link";
 
 const TimeLineEventCard = ({
   created_at,
@@ -65,7 +66,10 @@ const TimeLineEventCard = ({
   }, []);
 
   return (
-    <div className={`py-6 px-4 rounded-2xl ${renderBg}`}>
+    <Link
+      href={`/groups/comments?id=${id}`}
+      className={`py-6 px-4 rounded-2xl ${renderBg}`}
+    >
       <Image
         src={image || renderBgImg}
         width={1080}
@@ -94,7 +98,7 @@ const TimeLineEventCard = ({
           <GroupRectangleSVG />
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

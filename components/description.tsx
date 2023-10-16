@@ -5,15 +5,20 @@ const Description = ({ event }: { event: EventProps }) => {
   return (
     <>
       {/* mobile */}
-      <div className="evet__description bg-primary min-w-[100vw] flex-col  relative right-10 justify-center p-4 items-center relative flex lg:hidden">
+      <div className="evet__description bg-primary min-w-[100vw] flex-col  relative right-10 justify-center p-4 items-center flex lg:hidden">
         <div className=" flex  gap-6 mb-2 text-brand-pink-400 ">
-          <Image src="/assets/comments/back-arrow-icon.svg" alt={""} />
+          <Image
+            src="/assets/comments/back-arrow-icon.svg"
+            alt={""}
+            width={100}
+            height={100}
+          />
           <h1>11 comments</h1>
         </div>
 
         <div className="bg-brand-pink-400 max-w-[400px] p-2 rounded-lg ">
           <div className="flex">
-            <Image src={event.photoMobile} alt={""} />
+            <Image src={event.photoMobile} alt={""} width={100} height={100} />
             <div className=" font-bold">
               <h1 className="  text-2xl">{event.title}</h1>
               <h2 className=" ">{event.date}</h2>
@@ -35,7 +40,12 @@ const Description = ({ event }: { event: EventProps }) => {
       </div>
       {/* desktop */}
       <div className="hidden lg:flex rounded-xl bg-brand-purple-300 flex-col  max-w-[378px] p-3 max-h-[400px]">
-        <Image src="/assets/comments/event-photo-desk.svg" alt={""} />
+        <Image
+          src="/assets/comments/event-photo-desk.svg"
+          alt={""}
+          width={100}
+          height={100}
+        />
         <h1 className=" text-2xl">{event.title}</h1>
         <h2 className=" ">{event.date}</h2>
         <p className=" text-xs font-[100] ">

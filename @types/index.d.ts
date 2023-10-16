@@ -23,7 +23,7 @@ export interface EventCardProps {
   textColor?: string;
   btnColor?: string;
   comments?: boolean;
-  event: Event;
+  event: GroupEvents;
 }
 export interface GroupEventProps {
   image?: string | null;
@@ -57,7 +57,7 @@ export interface Event {
   event_end: string;
   event_start: string;
   event_end: string;
-  image: string ;
+  image: string;
 }
 
 export interface UserProfs {
@@ -111,7 +111,7 @@ export interface cardItem {
 }
 
 export interface MyPeopleProps {
-  id: number;
+  id: string;
   bgColor: string;
   imgSrc: any;
   name: string;
@@ -124,13 +124,14 @@ type AuthContextType = {
 };
 
 export interface Group {
-  id: number;
-  admin: string;
   created_at: string;
-  updated_at: string;
-  image: string;
+  created_by: string;
+  event_group: {}[];
   group_name: string;
-  friends: number[];
+  id: string;
+  image: string;
+  numEvents: 0;
+  updated_at: string;
 }
 
 export type FormValues = {
@@ -159,4 +160,29 @@ export interface User {
   id: string;
   token: string;
   username: string;
-};
+}
+
+export interface GroupDetails {
+  created_at: string;
+  created_by: string;
+  group_name: string;
+  id: string;
+  image: string;
+  numberOfMembers: number;
+  updated_at: string;
+  user_groups: { user_id: string }[];
+}
+
+export interface GroupEvents {
+  created_at: string;
+  created_by: string;
+  event_description: string;
+  event_end: string;
+  event_name: string;
+  event_start: string;
+  group_id: string;
+  id: string;
+  image: string;
+  location: string;
+  updated_at: string;
+}
