@@ -11,7 +11,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { LoadingSVG } from "@/components/layout/TimelineEvents";
 import { User } from "@/@types";
-import { useAuth } from "@/hooks/useAuth";
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -34,7 +33,8 @@ export default function Auth() {
     window.location.href = authUrl;
   };
 
-  const fetchData = async (authorizationCode: string) => {
+  const authorizeUser = async (authorizationCode: any) => {
+    console.log("Authorization Code:", authorizationCode);
     setIsLoading(true);
     try {
       // const callBackURL = "http://localhost:8080/api/auth/callback";
@@ -43,6 +43,7 @@ export default function Auth() {
       const response = await axios.get(
         `${callBackURL}?code=${authorizationCode}`,
       );
+
       console.log(response.data);
 
       if (response) {
@@ -55,15 +56,8 @@ export default function Auth() {
     } catch (error: any) {
       setIsLoading(false);
       console.error(error);
-      // router.push("/");
+      router.push("/");
       toast.error("Something went wrong");
-    }
-  };
-
-  const authorizeUser = async (authorizationCode: any) => {
-    if (authorizationCode) {
-      console.log("Authorization Code:", authorizationCode);
-      await fetchData(authorizationCode);
     }
   };
 
@@ -72,10 +66,12 @@ export default function Auth() {
     if (token) {
       router.push("/timeline");
     } else {
+      // Create a testToken to Cookies for local development
+      Cookies.set("test_token", "Rename to token & paste the real token here.");
+
       const queryParams = new URLSearchParams(window.location.search);
       const authorizationCode = queryParams.get("code");
       if (authorizationCode) {
-        Cookies.set("authorizationCode", authorizationCode);
         authorizeUser(authorizationCode);
       }
     }
@@ -88,7 +84,11 @@ export default function Auth() {
   };
 
   if (isLoading) {
-    return <LoadingSVG />;
+    return (
+      <div className="my-8">
+        <LoadingSVG />
+      </div>
+    );
   }
   return (
     <>

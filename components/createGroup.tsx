@@ -2,7 +2,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import http from "@/http/interceptor";
+// import http from "@/http/interceptor";
 import "react-toastify/dist/ReactToastify.css";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -318,7 +318,7 @@ export default function CreateNewGroup() {
                                 </label>
                                 <div className="flex relative">
                                   <Field
-                                    type="text"
+                                    type="email"
                                     id="friend"
                                     name="friend"
                                     autoComplete="off"

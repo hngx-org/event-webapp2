@@ -44,6 +44,7 @@ interface Group {
   friends: number[];
   created_at: string;
   updated_at: string;
+  numEvents: number;
 }
 
 export interface Event {
