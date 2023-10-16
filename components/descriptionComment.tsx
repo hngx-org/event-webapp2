@@ -6,6 +6,7 @@ import CommentInput from "./commentInput";
 import { UserProfs } from "@/@types";
 import { useState } from "react";
 import MainLayout from "./layout/mainLayout";
+import Image from "next/image";
 
 const DescriptionComment = () => {
   const footBallEvent = {
@@ -31,10 +32,12 @@ const DescriptionComment = () => {
       <div className="w-full">
         <div className="flex flex-col lg:max-w-[980px] lg:mx-auto w-full">
           <div className="gap-2 hidden lg:flex m-2 items-center">
-            <img
+            <Image
               className="go-back-to-previous-page cursor-pointer"
               src="/assets/comments/ion_arrow-up.svg"
               width={40}
+              height={50}
+              alt="up"
             />
             <h1 className="font-bold">11 commnents</h1>
           </div>

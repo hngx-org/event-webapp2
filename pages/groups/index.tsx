@@ -26,22 +26,6 @@ export default function People() {
     return events[randomIndex];
   }
 
-  // async function to fetch the data
-  // const fetchGroups = async () => {
-  //   try {
-  //     const response = await fetch(apiUrl);
-  //     // if (!response.ok) {
-  //     //   throw new Error("Network response was not OK");
-  //     // }
-  //     const data = await response.json();
-  //     setGroups(data);
-  //     setIsLoading(false);
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //     setIsLoading(false);
-  //   }
-  // };
-
   useEffect(() => {
     getGroups();
   }, []);
@@ -49,7 +33,6 @@ export default function People() {
   const getGroups = async () => {
     try {
       const res = await http.get("/groups");
-      console.log(res.data);
       setGroups(res.data);
       setIsLoading(false);
     } catch (error: any) {
@@ -68,12 +51,12 @@ export default function People() {
             <SkeletonLoader />
             <SkeletonLoader />
           </div>
-        ) : groups.length > 0 ? (
+        ) : groups?.length > 0 ? (
           <div className="bg-secondary grid md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 md:p-6 rounded-2xl">
             {groups.map((group) => (
               <MyPeopleCard
                 key={group.id}
-                imgSrc={TechiesImage}
+                imgSrc={group.image || TechiesImage}
                 // imgSrc={group.group_name}
                 bgColor={getRandomColor()}
                 events={group.numEvents}

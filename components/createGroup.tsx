@@ -1,7 +1,7 @@
 "use client";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
-// import { toast } from "react-toastify";
+import { toast } from "react-toastify";
 // import http from "@/http/interceptor";
 import "react-toastify/dist/ReactToastify.css";
 import { ErrorMessage, Field, Form, Formik } from "formik";
@@ -17,30 +17,24 @@ import {
 } from "@/public/assets/icon/peopleIcon";
 import Image from "next/image";
 import Avatar from "assets/images/avatar.png";
-import axios from "axios";
 import Cookies from "js-cookie";
+import axios from "axios";
 
-const initialValues = {
-  firstName: "",
-};
+interface User {
+  id: string;
+  email: string;
+  username: string;
+  avatar: string;
+}
 
 const override: CSSProperties = {
   borderWidth: "3px",
 };
+const userCookie = Cookies.get("user");
 
 const validationSchema = yup.object().shape({
-  firstName: yup.string().required("Required"),
-  //   lastName: yup.string().required("Required"),
-  email: yup.string().email("Invalid email").required("Required"),
-  //   roles: yup
-  //     .array()
-  //     .of(yup.string().required("At least one role is required"))
-  //     .min(1, "At least one option is required"),
-  //   warehouse: yup
-  //     .array()
-  //     .of(yup.string().required("At least one warehouse is required"))
-  //     .min(1, "At least one option is required"),
-  //   number: yup.number(),
+  groupName: yup.string().required("Required"),
+  //   emails: yup.string().email("Invalid email"),
 });
 
 export default function CreateNewGroup() {
@@ -53,8 +47,30 @@ export default function CreateNewGroup() {
   const [friendEmail, setFriendEmail] = useState<string>("");
   const [friendEmails, setFriendEmails] = useState<string[]>([]);
   const [isCreatingGroup, setIsCreatingGroup] = useState(false);
+  const [user, setUser] = useState<User>({
+    id: "",
+    email: "",
+    username: "",
+    avatar: "",
+  });
   const [uploadedFile, setUploadedFile] = useState<any>("");
-  // const [isAddingFriend, setIsAddingFriend] = useState(false);
+  const [users, setUsers] = useState<string[]>([user.email]);
+
+  const getCookies = () => {
+    if (userCookie) {
+      const userObject = JSON.parse(userCookie);
+      setUser(userObject);
+      setUsers([userObject.email]);
+    }
+  };
+  useEffect(() => {
+    getCookies();
+  }, []);
+
+  const initialValues = {
+    groupName: "",
+    emails: [user.email],
+  };
 
   function uploadImage(e: any) {
     const uploadedFile = e.target.files[0];
@@ -89,19 +105,17 @@ export default function CreateNewGroup() {
     setIsOpen(true);
   }
 
-  const onSubmit = () => {
-    1;
-  };
-
   // function to create a new group
-  const createNewGroup = async () => {
+  const onSubmit = async (
+    values: typeof initialValues,
+    { setSubmitting }: any,
+  ) => {
     try {
-      setIsCreatingGroup(true);
-
+      setSubmitting(true);
       const formData = new FormData();
-      formData.append("group_name", groupName);
+      formData.append("group_name", values.groupName);
       uploadedFile ? formData.append("image", uploadedFile || "") : null;
-      formData.append("emails", JSON.stringify([friendEmail]));
+      formData.append("emails", JSON.stringify(users));
 
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/groups`,
@@ -115,28 +129,35 @@ export default function CreateNewGroup() {
       );
 
       if (response.status === 201) {
-        setSuccessMsg("Group created successfully!");
+        toast.success("Group created successfully!");
         setGroupName("");
         setFriendEmails([]);
         closeModal();
       }
     } catch (error) {
-      setErrMsg("Error creating group. Please try again.");
+      toast.error("Error creating group. Please try again.");
+      setSubmitting(false);
       console.error(error);
     } finally {
-      // setIsCreatingGroup(false);
-      // closeModal();
+      setSubmitting(false);
+      closeModal();
     }
   };
 
   // function to add friend emails to an array
   const addFriendToGroup = () => {
-    if (friendEmail) {
-      setFriendEmails((prevEmails) => [...prevEmails, friendEmail]);
-      setSuccessMsg("Friend added successfully!");
-      setFriendEmail("");
-      console.log(friendEmails);
-    }
+    setUsers((prev) => [...prev, friendEmail]);
+    setFriendEmail("");
+    toast.success("Friend added successfully!, keep the fun going");
+  };
+
+  const removeEmail = (indexToRemove: number) => {
+    setUsers((prevUsers) => {
+      const updatedUsers = [...prevUsers];
+      updatedUsers.splice(indexToRemove, 1);
+      return updatedUsers;
+    });
+    toast.success("Friend Removed");
   };
 
   return (
@@ -207,16 +228,29 @@ export default function CreateNewGroup() {
                           <Form action="" autoComplete="off">
                             <div className="grid grid-cols-1 gap-6 pr-4 md:pr-8 text-sm sm:text-base">
                               {/* Group name */}
-                              <Input
-                                name="groupName"
-                                label="Group Name"
-                                type="name"
-                                placeholder="Enter a group name"
-                                value={groupName}
-                                onChange={(e: any) =>
-                                  setGroupName(e.target.value)
-                                }
-                              />
+                              <div className="w-full">
+                                <label
+                                  className="mb-2 font-semibold"
+                                  htmlFor="groupName"
+                                >
+                                  Group Name
+                                </label>
+                                <div className="flex relative">
+                                  <Field
+                                    type="name"
+                                    id="groupName"
+                                    name="groupName"
+                                    autoComplete="off"
+                                    className="w-full p-4 rounded-2xl border-2 border-black placeholder:text-brand-gray-400 font-medium"
+                                    placeholder="Enter group name"
+                                  />
+                                </div>
+                                <ErrorMessage
+                                  name="groupName"
+                                  component="p"
+                                  className="text-sm text-red-500"
+                                />
+                              </div>
                               {file ? (
                                 <>
                                   <div className="h-max flex flex-col items-center justify-center gap-2 overflow-hidden rounded-2xl">
@@ -317,35 +351,55 @@ export default function CreateNewGroup() {
                                 </p>
 
                                 {/* Friends list */}
-                                <div className="flex justify-between items-center">
-                                  <div className="flex gap-2 items-center">
-                                    <div className="w-8 md:w-12 h-8 md:h-12 rounded-full overflow-hidden">
-                                      <Image
-                                        src={Avatar}
-                                        alt="logo"
-                                        width={200}
-                                        height={200}
-                                        className="w-full h-full object-cover"
-                                      />
-                                    </div>
-                                    <div className="">
-                                      <p className="font-semibold">Salome</p>
-                                      <p className="text-brand-gray-400">
-                                        dycodes51@gmail.com
-                                      </p>
-                                    </div>
-                                  </div>
+                                <div className="space-y-4">
+                                  {users.length > 0 ? (
+                                    users.map((user, index) => {
+                                      return (
+                                        <div
+                                          key={user}
+                                          className="flex justify-between items-center"
+                                        >
+                                          <div className="flex gap-2 items-center">
+                                            <div className="w-8 md:w-12 h-8 md:h-12 rounded-full overflow-hidden">
+                                              <Image
+                                                src={Avatar}
+                                                alt="logo"
+                                                width={200}
+                                                height={200}
+                                                className="w-full h-full object-cover"
+                                              />
+                                            </div>
+                                            <div className="">
+                                              <p className="font-semibold">
+                                                {user}
+                                              </p>
+                                              {/* <p className="text-brand-gray-400">
+                                          salome357@gmail.com
+                                        </p> */}
+                                            </div>
+                                          </div>
 
-                                  <button>
-                                    <RedCancelIcon />
-                                  </button>
+                                          <button
+                                            onClick={() => {
+                                              removeEmail(index);
+                                            }}
+                                          >
+                                            <RedCancelIcon />
+                                          </button>
+                                        </div>
+                                      );
+                                    })
+                                  ) : (
+                                    <p className="font-semibold">
+                                      Please add an email address
+                                    </p>
+                                  )}
                                 </div>
                               </div>
                               <div className="">
                                 <button
                                   type="submit"
                                   disabled={formik.isSubmitting}
-                                  onClick={createNewGroup}
                                   className="block w-full bg-primary text-white rounded-[5px] py-[14px] font-semibold relative overflow-hidden"
                                 >
                                   {formik.isSubmitting && (
