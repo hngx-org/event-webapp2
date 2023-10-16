@@ -1,8 +1,8 @@
 "use client";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import http from "@/http/interceptor";
+// import { toast } from "react-toastify";
+// import http from "@/http/interceptor";
 import "react-toastify/dist/ReactToastify.css";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -17,6 +17,8 @@ import {
 } from "@/public/assets/icon/peopleIcon";
 import Image from "next/image";
 import Avatar from "assets/images/avatar.png";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 const initialValues = {
   firstName: "",
@@ -51,6 +53,7 @@ export default function CreateNewGroup() {
   const [friendEmail, setFriendEmail] = useState<string>("");
   const [friendEmails, setFriendEmails] = useState<string[]>([]);
   const [isCreatingGroup, setIsCreatingGroup] = useState(false);
+  const [uploadedFile, setUploadedFile] = useState<any>("");
   // const [isAddingFriend, setIsAddingFriend] = useState(false);
 
   function uploadImage(e: any) {
@@ -63,6 +66,7 @@ export default function CreateNewGroup() {
         setErrMsg("File size must be less than 1MB.");
         e.target.value = null;
       } else {
+        setUploadedFile(uploadedFile);
         setFile(URL.createObjectURL(uploadedFile));
         setErrMsg("");
       }
@@ -77,8 +81,8 @@ export default function CreateNewGroup() {
     setIsOpen(false);
     setGroupName("");
     setFile("");
-    setFriendEmail("")
-    setFriendEmails([])
+    setFriendEmail("");
+    setFriendEmails([]);
   }
 
   function openModal() {
@@ -93,22 +97,35 @@ export default function CreateNewGroup() {
   const createNewGroup = async () => {
     try {
       setIsCreatingGroup(true);
-      const response = await http.post('/groups', {
-        group_name: groupName,
-        emails: friendEmails,
-      });
+
+      const formData = new FormData();
+      formData.append("group_name", groupName);
+      uploadedFile ? formData.append("image", uploadedFile || "") : null;
+      formData.append("emails", JSON.stringify([friendEmail]));
+
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/groups`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        },
+      );
 
       if (response.status === 201) {
-        setSuccessMsg('Group created successfully!');
-        setGroupName('');
+        setSuccessMsg("Group created successfully!");
+        setGroupName("");
         setFriendEmails([]);
-      } 
+        closeModal();
+      }
     } catch (error) {
-      setErrMsg('Error creating group. Please try again.');
-      console.error(error)
+      setErrMsg("Error creating group. Please try again.");
+      console.error(error);
     } finally {
-      setIsCreatingGroup(false);
-      closeModal();
+      // setIsCreatingGroup(false);
+      // closeModal();
     }
   };
 
@@ -116,9 +133,9 @@ export default function CreateNewGroup() {
   const addFriendToGroup = () => {
     if (friendEmail) {
       setFriendEmails((prevEmails) => [...prevEmails, friendEmail]);
-      setSuccessMsg('Friend added successfully!');
+      setSuccessMsg("Friend added successfully!");
       setFriendEmail("");
-      console.log(friendEmails)
+      console.log(friendEmails);
     }
   };
 
@@ -196,7 +213,9 @@ export default function CreateNewGroup() {
                                 type="name"
                                 placeholder="Enter a group name"
                                 value={groupName}
-                                onChange={(e: any) => setGroupName(e.target.value)}
+                                onChange={(e: any) =>
+                                  setGroupName(e.target.value)
+                                }
                               />
                               {file ? (
                                 <>
@@ -265,16 +284,22 @@ export default function CreateNewGroup() {
                                 </label>
                                 <div className="flex relative">
                                   <Field
-                                    type="text"
+                                    type="email"
                                     id="friend"
                                     name="friend"
                                     autoComplete="off"
                                     className="w-full p-4 rounded-2xl border-2 border-black placeholder:text-brand-gray-400 font-medium"
                                     placeholder="Enter friend’s email address"
                                     value={friendEmail}
-                                    onChange={(e: any) => setFriendEmail(e.target.value)}
+                                    onChange={(e: any) =>
+                                      setFriendEmail(e.target.value)
+                                    }
                                   />
-                                  <button onClick={addFriendToGroup}  type="submit" className="absolute top-4 right-4 font-bold underline bg-white px-2">
+                                  <button
+                                    onClick={addFriendToGroup}
+                                    type="submit"
+                                    className="absolute top-4 right-4 font-bold underline bg-white px-2"
+                                  >
                                     Add friend
                                   </button>
                                 </div>
@@ -306,7 +331,7 @@ export default function CreateNewGroup() {
                                     <div className="">
                                       <p className="font-semibold">Salome</p>
                                       <p className="text-brand-gray-400">
-                                        salome357@gmail.com
+                                        dycodes51@gmail.com
                                       </p>
                                     </div>
                                   </div>
