@@ -17,6 +17,7 @@ type Anchor = "left" | "top" | "bottom" | "right";
 
 function MainLayout({ children, title }: MainLayoutProps) {
   const router = useRouter();
+  const [isAuth, setIsAuth] = useState(false);
   const [state, setState] = useState({
     left: false,
   });
@@ -26,7 +27,9 @@ function MainLayout({ children, title }: MainLayoutProps) {
   };
   useEffect(() => {
     const token = Cookies.get("token");
-    if (!token) {
+    if (token) {
+      setIsAuth(true);
+    } else {
       router.push("/");
     }
   }, []);
@@ -36,61 +39,63 @@ function MainLayout({ children, title }: MainLayoutProps) {
     router.push("/");
   }
 
-  return (
-    <div>
-      <div className="lg:hidden bg-primary p-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold text-white">{title}</h2>
+  if (isAuth) {
+    return (
+      <div>
+        <div className="lg:hidden bg-primary p-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold text-white">{title}</h2>
 
-          <Button
-            onClick={toggleDrawer("left", true)}
-            //   sx={{ width: "100%", justifyContent: "flex-end" }}
+            <Button
+              onClick={toggleDrawer("left", true)}
+              //   sx={{ width: "100%", justifyContent: "flex-end" }}
+            >
+              <HarmburgerIcon />
+            </Button>
+          </div>
+          <Drawer
+            anchor="left"
+            open={state["left"]}
+            onClose={toggleDrawer("left", false)}
           >
-            <HarmburgerIcon />
-          </Button>
-        </div>
-        <Drawer
-          anchor="left"
-          open={state["left"]}
-          onClose={toggleDrawer("left", false)}
-        >
-          <aside className="w-[320px] bg-primary h-full flex flex-col justify-between pb-8 rounded-r-3xl">
-            <div className="w-full">
-              {/* Icon */}
-              <div className="inline-flex items-center gap-2 mt-6 mx-14 mb-16">
-                <Image
-                  src={Logo}
-                  alt="logo"
-                  width={201}
-                  height={54}
-                  className="w-auto h-auto"
-                />
-                <h3 className="text-brand-gray-100 text-lg font-bold">
-                  WetinDeySup
-                </h3>
+            <aside className="w-[320px] bg-primary h-full flex flex-col justify-between pb-8 rounded-r-3xl">
+              <div className="w-full">
+                {/* Icon */}
+                <div className="inline-flex items-center gap-2 mt-6 mx-14 mb-16">
+                  <Image
+                    src={Logo}
+                    alt="logo"
+                    width={201}
+                    height={54}
+                    className="w-auto h-auto"
+                  />
+                  <h3 className="text-brand-gray-100 text-lg font-bold">
+                    WetinDeySup
+                  </h3>
+                </div>
+
+                <NavLinks />
               </div>
 
-              <NavLinks />
-            </div>
-
-            <button
-              className="flex gap-3 items-center text-white/50 font-medium px-12"
-              onClick={logout}
-            >
-              <LogoutIcon />
-              <span>Log Out</span>
-            </button>
-          </aside>
-        </Drawer>
+              <button
+                className="flex gap-3 items-center text-white/50 font-medium px-12"
+                onClick={logout}
+              >
+                <LogoutIcon />
+                <span>Log Out</span>
+              </button>
+            </aside>
+          </Drawer>
+        </div>
+        <div className="w-full h-screen overflow-hidden flex bg-brand-gray-100">
+          <Sidebar />
+          <main className="flex-grow h-full overflow-y-auto pb-4 lg:px-10 lg:pb-10">
+            {children}
+          </main>
+        </div>
       </div>
-      <div className="w-full h-screen overflow-hidden flex bg-brand-gray-100">
-        <Sidebar />
-        <main className="flex-grow h-full overflow-y-auto pb-4 lg:px-10 lg:pb-10">
-          {children}
-        </main>
-      </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default MainLayout;
