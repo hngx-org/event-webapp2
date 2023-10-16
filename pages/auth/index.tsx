@@ -66,6 +66,11 @@ export default function Auth() {
     if (token) {
       router.push("/timeline");
     } else {
+      // Create a testToken in localStorage for local development
+      localStorage.setItem(
+        "test_token",
+        "Rename to token & paste the real token here.",
+      );
       const queryParams = new URLSearchParams(window.location.search);
       const authorizationCode = queryParams.get("code");
       if (authorizationCode) {
