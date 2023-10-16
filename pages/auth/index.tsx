@@ -11,8 +11,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { LoadingSVG } from "@/components/layout/TimelineEvents";
 import { User } from "@/@types";
-import { useAuth } from "@/hooks/useAuth";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 type dataRes = {
   data: User;
@@ -24,7 +24,7 @@ export default function Auth() {
   const router = useRouter();
   const clientId =
     "69712066400-eu3ddnj8njs960htlnbh9hlgrvfg6ke9.apps.googleusercontent.com";
-  // const redirectUri = "http://localhost:3000";
+  //   const redirectUri = "http://localhost:3000";
   const redirectUri = "https://zuri-event-webapp2.vercel.app";
   const [isLoading, setIsLoading] = useState(false);
 
@@ -33,49 +33,47 @@ export default function Auth() {
     window.location.href = authUrl;
   };
 
-  const fetchData = async (authorizationCode: string) => {
+  const authorizeUser = async (authorizationCode: any) => {
+    console.log("Authorization Code:", authorizationCode);
     setIsLoading(true);
     try {
       // const callBackURL = "http://localhost:8080/api/auth/callback";
       const callBackURL =
-        "https://zuri-event-webapp2.vercel.app/api/auth/callback";
+        "https://wetindeysup-api.onrender.com/api/auth/callback";
       const response = await axios.get(
         `${callBackURL}?code=${authorizationCode}`,
       );
+
       console.log(response.data);
 
       if (response) {
         setIsLoading(false);
         // Save token and user info
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-        console.log("push:", response.data);
+        Cookies.set("token", response.data.token);
+        Cookies.set("user", JSON.stringify(response.data.user));
         router.push("/timeline");
       }
     } catch (error: any) {
       setIsLoading(false);
       console.error(error);
       router.push("/");
-      toast.error(error || "Login failed! Try again");
-    }
-  };
-
-  const authorizeUser = async () => {
-    const queryParams = new URLSearchParams(window.location.search);
-    const authorizationCode = queryParams.get("code");
-
-    if (authorizationCode) {
-      console.log("Authorization Code:", authorizationCode);
-      await fetchData(authorizationCode);
+      toast.error("Something went wrong");
     }
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (token) {
       router.push("/timeline");
     } else {
-      authorizeUser();
+      // Create a testToken to Cookies for local development
+      Cookies.set("test_token", "Rename to token & paste the real token here.");
+
+      const queryParams = new URLSearchParams(window.location.search);
+      const authorizationCode = queryParams.get("code");
+      if (authorizationCode) {
+        authorizeUser(authorizationCode);
+      }
     }
   }, []);
 
@@ -86,7 +84,11 @@ export default function Auth() {
   };
 
   if (isLoading) {
-    return <LoadingSVG />;
+    return (
+      <div className="my-8">
+        <LoadingSVG />
+      </div>
+    );
   }
   return (
     <>

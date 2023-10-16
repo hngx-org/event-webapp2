@@ -2,11 +2,7 @@ import React from "react";
 import DescriptionComment from "@/components/descriptionComment";
 
 const comments = () => {
-  return (
-    <div>
-      <DescriptionComment />
-    </div>
-  );
+  return <DescriptionComment />;
 };
 
 export default comments;

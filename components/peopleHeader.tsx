@@ -1,39 +1,45 @@
 import React from "react";
+import Link from "next/link";
 import { SearchIcon } from "@/public/assets/icon/searchIcon";
 import { BackArrowIcon } from "@/public/assets/icon/peopleIcon";
-import { title } from "process";
-import Link from "next/link";
 import SearchBar from "./searchBar";
+import { GroupDetails } from "@/@types";
+import Image from "next/image";
+import TechiesImage from "assets/mypeople/people1.png";
 
 export default function PeopleHeader({
-  title,
-  numberOfEvents,
-  image,
-  groupName
-} : any) {
+  data,
+  eventLength,
+}: {
+  data: GroupDetails;
+  eventLength: number | undefined;
+}) {
   return (
     <header className="w-full flex justify-between h-max sticky top-0 bg-brand-gray-100 z-20 py-10">
       {/* Title section */}
       <div className="flex items-center gap-2">
-        <Link href="/groups" className="">
+        <Link href="/groups">
           <BackArrowIcon />
         </Link>
-        <div className="">
-          <h2 className="text-2xl font-bold">Techies</h2>
-          <p className="text-brand-gray-400 font-medium">{numberOfEvents} events</p>
+        <div className="flex gap-3">
+          <div className="w-[72px] h-[72px] rounded-full overflow-hidden bg-[#D9D9D9]">
+            <Image
+              src={data?.image || TechiesImage}
+              width={200}
+              height={200}
+              alt="Image"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div className="">
+            <h2 className="text-2xl font-bold">{data?.group_name}</h2>
+            <p className="text-brand-gray-400 font-medium">
+              {eventLength ? eventLength : 0} events
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* Search */}
-      {/* <div className="w-80 h-14 relative">
-        <input
-          placeholder="Find an event"
-          className="h-full w-full border border-black/40 rounded-2xl p-2 pl-16 text-primary placeholder:text-brand-gray-600 focus:outline-none bg-transparent"
-        />
-        <div className="absolute left-5 top-5">
-          <SearchIcon />
-        </div>
-      </div> */}
       <SearchBar />
     </header>
   );

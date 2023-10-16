@@ -56,10 +56,24 @@ export default function Language() {
                 </p>
               </div>
 
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" value="" className="sr-only peer" />
-                <div className="w-11 h-6 bg-[#ABA0B5] peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#3F3849]/20  rounded-full peer  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all  peer-checked:bg-[#3F3849]"></div>
-              </label>
+              <div className="relative group inline-block">
+                <button className="flex justify-center bg-[#FFEEEB] border border-gray-300 w-28 py-3 rounded-xl font-semibold">
+                  English
+                  <svg
+                    className="w-6 h-6 ml-1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path d="M10 14l-5-5 1.5-1.5L10 11l3.5-3.5L15 9z" />
+                  </svg>
+                </button>
+                <ul className="hidden absolute z-10 space-y-2 bg-[#FFEEEB] border border-gray-300 px-0 rounded-lg w-40 text-gray-800 group-hover:block right-0">
+                  <li className="block px-4 py-2 hover:bg-red-100">English</li>
+                  <li className="block px-4 py-2 hover:bg-red-100">Français</li>
+                  <li className="block px-4 py-2 hover:bg-red-100">Español</li>
+                </ul>
+              </div>
             </div>
 
             <div className="space-y-4">
@@ -73,10 +87,30 @@ export default function Language() {
                   </p>
                 </div>
 
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" value="" className="sr-only peer" />
-                  <div className="w-11 h-6 bg-[#ABA0B5] peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#3F3849]/20  rounded-full peer  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all  peer-checked:bg-[#3F3849]"></div>
-                </label>
+                <div className="relative group inline-block">
+                  <button className="flex justify-center bg-[#D2F5FE] border border-gray-300 w-28 py-3 rounded-xl font-semibold">
+                    Lagos
+                    <svg
+                      className="w-6 h-6 ml-1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path d="M10 14l-5-5 1.5-1.5L10 11l3.5-3.5L15 9z" />
+                    </svg>
+                  </button>
+                  <ul className="hidden absolute z-10 space-y-2 bg-[#D2F5FE] border border-gray-300 px-0 rounded-lg w-40 text-gray-800 group-hover:block right-0">
+                    <li className="block px-4 py-2 hover:bg-blue-200/50">
+                      Lagos
+                    </li>
+                    <li className="block px-4 py-2 hover:bg-blue-200/50">
+                      Abuja
+                    </li>
+                    <li className="block px-4 py-2 hover:bg-blue-200/50">
+                      Rivers
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>

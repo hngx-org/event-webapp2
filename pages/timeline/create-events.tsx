@@ -19,11 +19,11 @@ import Image from "next/image";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { FormValues, UserGroups } from "@/@types";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import MainLayout from "@/components/layout/mainLayout";
 import http from "@/http/interceptor";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const today = dayjs().add(0, "day");
 
@@ -78,7 +78,7 @@ export default function CreateEvents(props: {
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${Cookies.get("token")}`,
           },
         },
       );
@@ -86,24 +86,13 @@ export default function CreateEvents(props: {
       if (response.status === 201) {
         toast.success("Event created successfully", {
           position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          theme: "light",
         });
-        router.push("/timeline");
+        setTimeout(() => {
+          router.push("/timeline");
+        }, 3000);
       } else {
-        console.error("Event creation error.");
-        toast.error("Event creation error", {
+        toast.error("Could not create event", {
           position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          theme: "light",
         });
       }
     } catch (error: any) {
@@ -111,12 +100,6 @@ export default function CreateEvents(props: {
       const errorMessage = error.response?.data?.error || "An error occurred";
       toast.error(errorMessage, {
         position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "light",
       });
     }
   };
@@ -154,18 +137,6 @@ export default function CreateEvents(props: {
     <MainLayout title="Create Event">
       <div className="h-full lg:py-6 rounded-3xl lg:rounded-none bg-brand-gray-100">
         <div className="flex items-center gap-6">
-          <ToastContainer
-            position="top-right"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="light"
-          />
           <Link href="/timeline">
             <ArrowUpLg />
             <ArrowUpSm />
@@ -298,7 +269,7 @@ export default function CreateEvents(props: {
                   <option className="text-[#9CA3AF]" disabled selected>
                     Enter event group
                   </option>
-                  {groups.map((group) => {
+                  {groups?.map((group) => {
                     return (
                       <option key={group.group_name} value={group.id}>
                         {group.group_name}
