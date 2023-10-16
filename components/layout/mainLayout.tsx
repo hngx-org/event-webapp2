@@ -26,9 +26,9 @@ function MainLayout({ children, title }: MainLayoutProps) {
   };
   useEffect(() => {
     const token = Cookies.get("token");
-    if (!token) {
-      router.push("/");
-    }
+    // if (!token) {
+    //   router.push("/");
+    // }
   }, []);
 
   function logout() {
