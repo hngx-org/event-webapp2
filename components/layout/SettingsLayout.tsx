@@ -1,8 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 
 const SettingsLayout = ({ children }: { children: React.ReactNode }) => {
+  const { user } = useAuth();
   const isActive = true;
   const pathname = usePathname();
 
@@ -12,15 +14,13 @@ const SettingsLayout = ({ children }: { children: React.ReactNode }) => {
         <div className="flex flex-col items-center gap-3">
           <Image
             alt="avatar"
-            src="/assets/images/avatarbig.png"
+            src={user?.avatar as string}
             width={199}
             height={199}
             className=" rounded-full"
           />
-          <p className="font-bold text-[26px] text-white">Salome</p>
-          <p className="font-medium text-base text-[#CBC5D3]">
-            salome357@gmail.com
-          </p>
+          <p className="font-bold text-[26px] text-white">{user?.username}</p>
+          <p className="font-medium text-base text-[#CBC5D3]">{user?.email}</p>
         </div>
 
         <div className="mt-4 rounded-[10px] overflow-hidden">
