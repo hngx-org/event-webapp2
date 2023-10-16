@@ -20,16 +20,18 @@ export default function Sidebar() {
     <aside className="min-w-[250px] w-[250px] bg-primary h-full hidden lg:flex lg:flex-col justify-between pb-8 rounded-r-3xl">
       <div className="w-full">
         {/* Icon */}
-        <div className="flex items-center justify-center gap-2 my-6">
-          <Image
-            src={Logo}
-            alt="logo"
-            width={45}
-            height={45}
-            className="w-auto h-auto"
-          />
-          <h3 className="text-brand-gray-100 font-bold">WetinDeySup</h3>
-        </div>
+        <Link href="/timeline">
+          <div className="flex items-center justify-center gap-2 my-6">
+            <Image
+              src={Logo}
+              alt="logo"
+              width={45}
+              height={45}
+              className="w-auto h-auto"
+            />
+            <h3 className="text-brand-gray-100 font-bold">WetinDeySup</h3>
+          </div>
+        </Link>
 
         <NavLinks />
       </div>
