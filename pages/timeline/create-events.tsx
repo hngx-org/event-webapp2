@@ -50,7 +50,7 @@ export default function CreateEvents(props: {
 
   const fetchGroups = async () => {
     const response = await http.get("/groups");
-    setGroups(response.data.userGroups);
+    setGroups(response.data);
   };
 
   useEffect(() => {
