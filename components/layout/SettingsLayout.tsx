@@ -9,7 +9,7 @@ const SettingsLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
 
   return (
-    <div className="w-full py-4 md:flex gap-8 ">
+    <div className="w-full py-4 md:flex gap-8 px-4 ">
       <div className="px-4 py-6 md:w-2/5 bg-[#3F3849] rounded-2xl">
         <div className="flex flex-col items-center gap-3">
           <Image
