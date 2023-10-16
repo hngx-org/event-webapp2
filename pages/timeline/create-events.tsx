@@ -269,7 +269,7 @@ export default function CreateEvents(props: {
                   <option className="text-[#9CA3AF]" disabled selected>
                     Enter event group
                   </option>
-                  {groups.map((group) => {
+                  {groups?.map((group) => {
                     return (
                       <option key={group.group_name} value={group.id}>
                         {group.group_name}
