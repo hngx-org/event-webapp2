@@ -97,11 +97,13 @@ export default function CreateNewGroup() {
   const createNewGroup = async () => {
     try {
       setIsCreatingGroup(true);
+      let userEmail = JSON.parse(Cookies.get("user")).email;
+      let groupMembersEmails = [userEmail, friendEmail];
 
       const formData = new FormData();
       formData.append("group_name", groupName);
       uploadedFile ? formData.append("image", uploadedFile || "") : null;
-      formData.append("emails", JSON.stringify([friendEmail]));
+      formData.append("emails", JSON.stringify(groupMembersEmails));
 
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/groups`,
