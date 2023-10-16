@@ -3,30 +3,67 @@ import MainLayout from "@/components/layout/mainLayout";
 import SearchBar from "@/components/searchBar";
 import { SearchIcon } from "@/public/assets/icon/searchIcon";
 import { Button } from "@mui/material";
-import {useSearchParams} from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Rectangle30 from "../../public/hng.png";
 import { useState, useEffect } from "react";
 
 export default function Index() {
-    const [data, setData] = useState<any>({})
-    const searchParams = useSearchParams();
-    const keyword = searchParams.get("keyword");
-    
-    useEffect(() => 
-    {
-        fetchData()
-    }, 
-[])
-    const fetchData = () => fetch(`https://wetindeysup-api.onrender.com/api/events/search?keyword=${keyword}`
-       
+  const [data, setData] = useState<any>({});
+  const searchParams = useSearchParams();
+  const keyword = searchParams.get("keyword");
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+  const fetchData = () =>
+    fetch(
+      `https://wetindeysup-api.onrender.com/api/events/search?keyword=${keyword}`,
     )
-    .then(res => res.json())
-    .then(res => {
-      console.log(res.data[0])
-      setData(res.data[0])
-    })
-    .catch(error => console.log(error))
-   console.log(typeof(data.event_name))
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res.data[0]);
+        setData(res.data[0]);
+      })
+      .catch((error) => console.log(error));
+  console.log(typeof data.event_name);
+  function convertToEventDate(timestamp: string): string {
+    return new Date(timestamp).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      timeZone: "Africa/Lagos",
+    });
+  }
+  function convertToEventTime(
+    startDateISO: string,
+    endDateISO: string,
+  ): string {
+    const optionsStart: Intl.DateTimeFormatOptions = {
+      weekday: "long",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+      timeZone: "Africa/Lagos",
+    };
+    const optionsEnd: Intl.DateTimeFormatOptions = {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+      timeZone: "Africa/Lagos",
+    };
+
+    let startDate = new Date(startDateISO).toLocaleDateString(
+      "en-US",
+      optionsStart,
+    );
+    const endDate = new Date(endDateISO).toLocaleTimeString(
+      "en-US",
+      optionsEnd,
+    );
+
+    startDate = startDate.slice(0, -6) + "," + startDate.slice(-6);
+    return `${startDate} - ${endDate}`;
+  }
   const ArrowDownSVG: React.FC = () => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -109,92 +146,97 @@ export default function Index() {
       </defs>
     </svg>
   );
-//   const lower:string = data.event_name
-//   console.log(lower)
-//   const low:string = lower.toLowerCase()
-//   console.log(low)
+  //   const lower:string = data.event_name
+  //   console.log(lower)
+  //   const low:string = lower.toLowerCase()
+  //   console.log(low)
   const Render = () => {
-    if(data && data.event_name) {
-        interface TimelinePitchItem {
-    
-            bg: string;
-            imgSrc: any;
-            name: string;
-            date: string;
-            time: string;
-            stadium: string;
-          }
-          const pitchArray: TimelinePitchItem[] = [
-            {
-              
-              bg: "bg-[#FFE0C4]",
-              imgSrc: `${data.image}`,
-              name: `${data.event_name}`,
-              date: `${data.event_start}`,
-              time: `${data.event_end}`,
-              stadium: `${data.location}`,
-            },
-          ];
-          const pitchData = pitchArray.map((item, index) => (
-            <div key={index} className={`py-6 px-4 rounded-2xl ${item.bg}`}>
-              <Image src={item.imgSrc} className="w-full" alt="" width={100} height={100} />
-              <div className="relative mt-4 flex justify-between gap-3">
-                <span className="text-black font-sans font-medium text-base">
-                  <h2 className="font-sans text-xl font-bold text-[#3F3849]">
-                    {item.name}
-                  </h2>
-                  <h6 className="mt-3">{item.date}</h6>
-                  <p className="mt-3 opacity-70">{item.time}</p>
-                  <p className="mt-3 font-normal">{item.stadium}</p>
-                </span>
-                <button className="z-10 active:scale-[0.95]">
-                  <NextBtnSVG />
-                </button>
-                <div className="absolute top-[-25px] right-[-16px]">
-                  <GroupRectangleSVG />
-                </div>
-              </div>
-            </div>
-          ));
-        return (
-            <div className="mt-[19px] grid lg:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-8 "> 
-                {pitchData} 
-            </div>
-        )
-      } else {
-        return (
-            <div className="flex flex-col items-center gap-3">
-                <Image
-                alt="noresult"
-                src="/assets/images/noresult.png"
-                width={240}
-                height={240}
-                className="text-center"
-                />
-                <h1 className="text-black-900 font-bold font-16 text-2xl">
-                Oops, something is missing
-                </h1>
-                <p className="items-center text-gray-500">
-                We couldn&apos;t find any results for your search. Please check
-                </p>
-                <p className="items-center text-gray-500">your entry and try again.</p>
-                <Button
-                className="pt-4 pb-4 pl-4 pr-4 bg-pink-400  mt-8  rounded-2xl"
-                href="/timeline"
-                >
-                <Image
-                    alt="vector"
-                    src="/assets/images/Vector.png"
-                    width={20}
-                    height={20}
-                    className="mr-3"
-                />
-                <span id="btn">Go back to the timeline</span>
-                </Button>
-            </div> 
-        )
+    if (data && data.event_name) {
+      interface TimelinePitchItem {
+        bg: string;
+        imgSrc: any;
+        name: string;
+        date: string;
+        time: string;
+        stadium: string;
       }
-  
+      const pitchArray: TimelinePitchItem[] = [
+        {
+          bg: "bg-[#FFE0C4]",
+          imgSrc: `${data.image}`,
+          name: `${data.event_name}`,
+          date: convertToEventDate(data.event_start),
+          time: convertToEventTime(data.event_start, data.event_end),
+          stadium: `${data.location || "Undisclosed"}`,
+        },
+      ];
+      const pitchData = pitchArray.map((item, index) => (
+        <div key={index} className={`py-6 px-4 rounded-2xl ${item.bg}`}>
+          <Image
+            src={item.imgSrc}
+            className="w-full"
+            alt=""
+            width={100}
+            height={100}
+          />
+          <div className="relative mt-4 flex justify-between gap-3">
+            <span className="text-black font-sans font-medium text-base">
+              <h2 className="font-sans text-xl font-bold text-[#3F3849]">
+                {item.name}
+              </h2>
+              <h6 className="mt-3">{item.date}</h6>
+              <p className="mt-3 opacity-70">{item.time}</p>
+              <p className="mt-3 font-normal">{item.stadium}</p>
+            </span>
+            <button className="z-10 active:scale-[0.95]">
+              <NextBtnSVG />
+            </button>
+            <div className="absolute top-[-25px] right-[-16px]">
+              <GroupRectangleSVG />
+            </div>
+          </div>
+        </div>
+      ));
+      return (
+        <div className="mt-[19px] grid lg:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-8 ">
+          {pitchData}
+        </div>
+      );
+    } else {
+      return (
+        <div className="flex flex-col items-center gap-3">
+          <Image
+            alt="noresult"
+            src="/assets/images/noresult.png"
+            width={240}
+            height={240}
+            className="text-center"
+          />
+          <h1 className="text-black-900 font-bold font-16 text-2xl">
+            Oops, something is missing
+          </h1>
+          <p className="items-center text-gray-500">
+            We couldn&apos;t find any results for your search. Please check
+          </p>
+          <p className="items-center text-gray-500">
+            your entry and try again.
+          </p>
+          <Button
+            className="pt-4 pb-4 pl-4 pr-4 bg-pink-400  mt-8  rounded-2xl"
+            href="/timeline"
+          >
+            <Image
+              alt="vector"
+              src="/assets/images/Vector.png"
+              width={20}
+              height={20}
+              className="mr-3"
+            />
+            <span id="btn">Go back to the timeline</span>
+          </Button>
+        </div>
+      );
+    }
   };
   return (
     <MainLayout>
@@ -207,15 +249,13 @@ export default function Index() {
             </h2>
             <p className="text-sm xl:text-base font-medium">
               <span className=" text-brand-gray-400">showing results for</span>{" "}
-              <span className="text-brand-black-400 font-bold">
-                {keyword}
-              </span>
+              <span className="text-brand-black-400 font-bold">{keyword}</span>
             </p>
           </div>
         </div>
-        <SearchBar  />
+        <SearchBar />
       </header>
-      <Render />  
+      <Render />
     </MainLayout>
   );
 }
