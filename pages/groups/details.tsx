@@ -13,7 +13,7 @@ export default function PeopleDetails() {
   // console.log('Group Id', id)
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-  console.log("GroupId" , id)
+  console.log("GroupId", id);
 
   const [data, setData] = useState<any>([]);
   const bgColors = [
@@ -27,27 +27,26 @@ export default function PeopleDetails() {
     "bg-brand-pink-500",
     "bg-brand-purple-300",
   ];
-    const fetchData = () => fetch(`https://wetindeysup-api.onrender.com/api/groups/events/${id}`)
-    .then(res => res.json())
-    .then(res => {
-      console.log(res.data)
-      setData(res.data)
-    })
-    .catch(error => console.log(error))
+  const fetchData = () =>
+    fetch(`https://wetindeysup-api.onrender.com/api/groups/events/${id}`)
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res.data);
+        setData(res.data);
+      })
+      .catch((error) => console.log(error));
 
   useEffect(() => {
     fetchData();
     console.log("effecct ran");
   }, []);
-console.log(data[0])
+
   return (
-    <MainLayout >
-        <PeopleHeader
-        numberOfEvents={data.length}
-      /> 
-       {data.length > 0 ? (
+    <MainLayout>
+      <PeopleHeader numberOfEvents={data?.length} />
+      {data?.length > 0 ? (
         <div className="w-full max-w-[714px] mx-auto min-[1230px]:max-w-[998px] px-2 md:p-6 flex gap-6 flex-wrap min-[1230px]:flex-nowrap md:bg-brand-gray-300 md:rounded-2xl">
-          {data.map((event:any, index:number) => {
+          {data?.map((event: any, index: number) => {
             const randomNumber = Math.floor(Math.random() * otherColors.length);
             const randomColor = otherColors[randomNumber];
             return (
@@ -64,8 +63,7 @@ console.log(data[0])
         </div>
       ) : (
         <p className="text-center text-lg">No events for this group</p>
-      )}  
+      )}
     </MainLayout>
   );
-  
-  } 
+}

@@ -13,19 +13,18 @@ export default function People() {
   const [isLoading, setIsLoading] = useState(true);
 
   // const apiUrl = "https://wetindeysup-api.onrender.com/api/groups";
-  
+
   function getRandomColor() {
     const colors = ["#D2F5FE", "#EEE0FF", "#FFE0C4", "#FFC6BC"];
     const randomIndex = Math.floor(Math.random() * colors.length);
     return colors[randomIndex];
   }
-  
+
   function getRandomEvents() {
     const events = [4, 10, 6, 8, 5, 3];
     const randomIndex = Math.floor(Math.random() * events.length);
     return events[randomIndex];
   }
-  
 
   // async function to fetch the data
   // const fetchGroups = async () => {
@@ -47,18 +46,16 @@ export default function People() {
     getGroups();
   }, []);
 
-
   const getGroups = async () => {
     try {
       const res = await http.get("/groups");
-      console.log(res.data.userGroups);
-      setGroups(res.data.userGroups);
+      console.log(res.data);
+      setGroups(res.data);
       setIsLoading(false);
     } catch (error: any) {
       console.log(error);
     }
   };
-
 
   return (
     <MainLayout title="Groups">
@@ -70,27 +67,25 @@ export default function People() {
             <SkeletonLoader />
             <SkeletonLoader />
             <SkeletonLoader />
-        </div>
+          </div>
+        ) : groups.length > 0 ? (
+          <div className="bg-secondary grid md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 md:p-6 rounded-2xl">
+            {groups.map((group) => (
+              <MyPeopleCard
+                key={group.id}
+                imgSrc={TechiesImage}
+                // imgSrc={group.group_name}
+                bgColor={getRandomColor()}
+                events={group.numEvents}
+                name={group.group_name}
+                id={group.id}
+              />
+            ))}
+          </div>
         ) : (
-          groups.length > 0 ? (
-            <div className="bg-secondary grid md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 md:p-6 rounded-2xl">
-              {groups.map((group) => (
-                <MyPeopleCard
-                  key={group.id}
-                  imgSrc={TechiesImage}
-                  // imgSrc={group.group_name}
-                  bgColor={getRandomColor()}
-                  events={getRandomEvents()}
-                  name={group.group_name}
-                  id={group.id} 
-                />
-              ))}
-            </div>
-          ) : (
-            <p className="text-xl p-4 text-center">
-              There are no groups currently, create one to connect with friends.
-            </p>
-          )
+          <p className="text-xl p-4 text-center">
+            There are no groups currently, create one to connect with friends.
+          </p>
         )}
       </div>
     </MainLayout>

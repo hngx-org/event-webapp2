@@ -44,6 +44,7 @@ interface Group {
   friends: number[];
   created_at: string;
   updated_at: string;
+  numEvents: number;
 }
 
 export interface Event {
@@ -57,7 +58,7 @@ export interface Event {
   event_end: string;
   event_start: string;
   event_end: string;
-  image: string ;
+  image: string;
 }
 
 export interface UserProfs {
@@ -159,4 +160,4 @@ export interface User {
   id: string;
   token: string;
   username: string;
-};
+}
