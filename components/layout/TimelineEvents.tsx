@@ -123,7 +123,7 @@ const dropdownItems: dropdownProps[] = [
   },
 
   {
-    text: "This Week",
+    text: "Last Week",
     value: "last-week",
   },
   {
