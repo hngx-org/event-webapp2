@@ -1,9 +1,14 @@
 import Header from "@/components/header";
+import HelpToggle from "@/components/helpToggle";
 import SettingsLayout from "@/components/layout/SettingsLayout";
 import MainLayout from "@/components/layout/mainLayout";
-import React from "react";
+import React, { useState } from "react";
 
 export default function Help() {
+  const [show, setShow] = useState<boolean>(false);
+  const toggleDisplay = () => {
+    setShow((prev) => !prev);
+  };
   return (
     <MainLayout>
       <div className="w-full">
@@ -30,18 +35,33 @@ export default function Help() {
             <p className="font-bold text-lg">Help and Support</p>
           </div>
 
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <div>
-                <h3 className="uppercase font-semibold text-lg">
-                  Can’t create event?
-                </h3>
-                <p className="mt-4 text-black/70">
-                  To create an event, you must first create a group, as events
-                  need to be associated with a specific group. Please ensure you
-                  have a group created before attempting to create an event.
-                </p>
-              </div>
+          <div className="grid gap-[40px]">
+            <div className="flex flex-col gap-[25px] justify-between items-center">
+              <HelpToggle
+                content={{
+                  title: "Can't create event?",
+                  body: "To create an event, you must first create a group, as events need to be associated with a specific group. Please ensure you have a group created before attempting to create an event.",
+                }}
+              />
+              <HelpToggle
+                content={{
+                  title: "Can’t see the list of your people?",
+                  body: "If you are unable to view the list of your people, the issue may originate from your end. We recommend verifying your internet connection's stability or relocating to an area with a stronger connection to retry the action.",
+                }}
+              />
+              <HelpToggle
+                content={{
+                  title:
+                    "Still receiving email notifications after you cancel it?",
+                  body: "If you continue to receive email notifications despite having canceled them, the issue may be on our end. We sincerely apologize for any inconvenience this may have caused. Please complete this form so that we can address the matter promptly and make the necessary adjustments. Thank you for your understanding.",
+                }}
+              />
+            </div>
+            <div>
+              <p className="text-base text-black/70">
+                Have more questions?{" "}
+                <span className="font-bold">Contact Us</span>
+              </p>
             </div>
           </div>
         </SettingsLayout>
